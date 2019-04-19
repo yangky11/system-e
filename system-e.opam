@@ -1,0 +1,19 @@
+synopsis:     "Coq Plugin Template"
+description:  "Coq Plugin Template"
+name:         "system-e"
+opam-version: "2.0"
+maintainer:   "kaiyuy@cs.princeton.edu"
+authors:      "Kaiyu Yang"
+homepage:     "https://github.com/princeton-vl/system-e"
+bug-reports:  "https://github.com/princeton-vl/system-e"
+dev-repo:     "git+hhttps://github.com/princeton-vl/system-e"
+license:      "GPL 3"
+doc:          "https://github.com/princeton-vl/system-e"
+
+depends: [
+  "ocaml"         { >= "4.07.1"           }
+  "coq"           { >= "8.9.0" & < "8.10" }
+  "dune"          { build & >= "1.9.0"    }
+]
+
+build: [ "dune" "build" "-p" name "-j" jobs ]

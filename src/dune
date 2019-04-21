@@ -1,12 +1,14 @@
 (library
- (name euclid_plugin)
- (public_name system-e.plugin)
- (synopsis "Coq Template Plugin")
- (flags :standard -w -27)       ; CoqPP codes requires this
- (libraries
-   coq.vernac                      ; needed for vernac extend
-   coq.plugins.ltac                ; needed only for tactic extend
-))
+  (name euclid_plugin)
+  (public_name system-e.plugin)
+  (synopsis "Coq Template Plugin")
+  (flags :standard -w -27)       ; CoqPP codes requires this
+  (libraries
+    coq.vernac                      ; needed for vernac extend
+    coq.plugins.ltac                ; needed only for tactic extend
+    core
+  )
+)
 
 (rule
  (targets tactics_syntax.ml)

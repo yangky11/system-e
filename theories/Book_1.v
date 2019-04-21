@@ -2,7 +2,10 @@ Require Import Axioms.
 
 Lemma foo : True.
 Proof.
-hello. now auto.
+    hello. 
+    hello. 
+    hello. 
+    now auto.
 Qed.
 
 Theorem Proposition_1 : forall (a b : Point), a <> b ->

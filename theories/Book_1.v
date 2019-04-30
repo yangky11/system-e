@@ -3,13 +3,14 @@ Require Import Axioms.
 Lemma foo : True.
 Proof.
     hello. 
-    hello. 
-    hello. 
+    smt. 
+    
     now auto.
 Qed.
 
+
 Theorem Proposition_1 : forall (a b : Point), a <> b ->
-    exists c : Point, Segment_PP c a == Segment_PP c b == Segment_PP a b.
+    exists c : Point, (Segment_PP c a == Segment_PP c b == Segment_PP a b)%segment.
 Proof.
     intros.
     euclid_apply (ConstructionRules.circle_from_points a b) as alpha. (* construct a circle centered around a *)
@@ -25,16 +26,23 @@ Proof.
     lra. 
 Qed.
 
-(*
+
 Theorem Proposition_2 : forall (a b c : Point), a <> b /\ b <> c ->
-    exists l : Point, Segment_PP a l == Segment_PP b c.
+    exists l : Point, (Segment_PP a l == Segment_PP b c)%segment.
 Proof.
     intros; destruct H.
     euclid_apply (Proposition_1 a b) as d.
-    assert (H3 : a <> d).
-    { unfold not. intros. Check MetricInferences.zero_segment_onlyif.
-    Check (MetricInferences.zero_segment_if a b).
-    euclid_apply (ConstructionRules.line_from_points d a).
-    euclid_apply (ConstructionRules.circle_from_points b c) as alpha.
-    euclid_apply (DiagrammaticInferences.intersection_circle_line_2 b alpha (Segment_PP d b)).
-*)
+    euclid_apply (ConstructionRules.line_from_points d a) as AE.
+    euclid_apply (ConstructionRules.line_from_points d b) as BF.
+    euclid_apply (ConstructionRules.circle_from_points b c) as CGH.
+    euclid_apply (ConstructionRules.intersection_circle_line CGH AE) as g.
+    euclid_apply (ConstructionRules.circle_from_points d g) as GKL.
+    euclid_apply (ConstructionRules.intersection_circle_line GKL BF) as l.
+    euclid_apply (TransferInferences.point_on_circle_onlyif b c g CGH).
+    euclid_apply (TransferInferences.point_on_circle_onlyif d l g GKL).
+    euclid_apply (TransferInferences.between d a l).
+    euclid_apply (TransferInferences.between d b g).
+    exists l.
+    lra.
+    Grab Existential Variables.
+Admitted.

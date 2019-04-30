@@ -1,5 +1,5 @@
 (* Six sorts: point, line, circle, segment, angle, area *)
-Require Import Reals.
+Require Export Reals.
 Open Scope R.
 
 Parameter Point : Set.

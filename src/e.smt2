@@ -1,23 +1,23 @@
-(set-logic AUFLIRA)
+;(set-logic AUFLIRA)
 
-(declare-sort Point)
-(declare-sort Line)
-(declare-sort Circle)
+;(declare-sort Point)
+;(declare-sort Line)
+;(declare-sort Circle)
 
-(declare-fun Between (Point Point Point) Bool)
-(declare-fun On_L (Point Line) Bool)
-(declare-fun On_C (Point Circle) Bool)
-(declare-fun Inside (Point Circle) Bool)
-(declare-fun Center (Point Circle) Bool)
-(declare-fun SameSide (Point Point Line) Bool)
-(declare-fun Intersects_LL (Line Line) Bool)
-(declare-fun Intersects_LC (Line Circle) Bool)
-(declare-fun Intersects_CC (Circle Circle) Bool)
+;(declare-fun Between (Point Point Point) Bool)
+;(declare-fun On_L (Point Line) Bool)
+;(declare-fun On_C (Point Circle) Bool)
+;(declare-fun Inside (Point Circle) Bool)
+;(declare-fun Center (Point Circle) Bool)
+;(declare-fun SameSide (Point Point Line) Bool)
+;(declare-fun Intersects_LL (Line Line) Bool)
+;(declare-fun Intersects_LC (Line Circle) Bool)
+;(declare-fun Intersects_CC (Circle Circle) Bool)
 
-(declare-fun Segment_PP (Point Point) Real)
-(declare-fun Angle_PPP (Point Point Point) Real)
-(declare-fun Area_PPP (Point Point Point) Real)
-(declare-const RightAngle Real)
+;(declare-fun Segment_PP (Point Point) Real)
+;(declare-fun Angle_PPP (Point Point Point) Real)
+;(declare-fun Area_PPP (Point Point Point) Real)
+;(declare-const RightAngle Real)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -760,4 +760,5 @@
 )
 
 
-(check-sat)
+;(check-sat)
+;(get-model)

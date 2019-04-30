@@ -1,3 +1,6 @@
+Require Import Sorts.
+Open Scope R.
+
 (* + is associative and commutative, with identity 0. *)
 
 (* < is a linear ordering with least element 0 *)

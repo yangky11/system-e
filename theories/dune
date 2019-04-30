@@ -1,6 +1,6 @@
 (coq.theory
  (name SystemE)
  (public_name system-e.theory)
- (libraries system-e.plugin)
+ (libraries z3 system-e.plugin)
 )
 

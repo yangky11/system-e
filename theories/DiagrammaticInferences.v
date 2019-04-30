@@ -1,3 +1,5 @@
+Require Import Sorts.
+
 (* generalities *)
 
 (*

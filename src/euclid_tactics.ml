@@ -1,18 +1,27 @@
 open Z3
 
+module NamedDecl = Context.Named.Declaration
+
 let msg_in_tactic str : unit Proofview.tactic =
   Proofview.tclLIFT (Proofview.NonLogical.make (fun () ->
     Feedback.msg_warning (Pp.str str)))
+
 
 let printHello : unit Proofview.tactic =
   let open Proofview.Notations in
   msg_in_tactic "hello" >>= fun () ->
   Tacticals.New.tclIDTAC
 
+
 let smt : unit Proofview.tactic = 
   let open Proofview.Notations in
   msg_in_tactic Version.to_string >>= fun () ->
   Tacticals.New.tclIDTAC 
+
+
+let econstr2assertion env sigma term = 
+  Pp.string_of_ppcmds @@ Printer.pr_econstr_env env sigma term
+
 
 let euclid_smt : unit Proofview.tactic = 
   let cfg = [("model", "true"); ("proof", "true"); ("model_validate", "true"); ("well_sorted_check", "true")] in
@@ -47,7 +56,6 @@ let euclid_smt : unit Proofview.tactic =
   let intersects_cc_sym = Symbol.mk_string ctx "Intersects_CC" in
   let intersects_cc_func = FuncDecl.mk_func_decl ctx intersects_cc_sym [circle_sort; circle_sort] bool_sort in
 
-
   let segment_pp_sym = Symbol.mk_string ctx "Segment_PP" in
   let segment_pp_func = FuncDecl.mk_func_decl ctx segment_pp_sym [point_sort; point_sort] real_sort in
   let angle_ppp_sym = Symbol.mk_string ctx "Angle_PPP" in
@@ -71,10 +79,32 @@ let euclid_smt : unit Proofview.tactic =
   Params.add_symbol solver_param (Symbol.mk_string ctx "logic") (Symbol.mk_string ctx "AUFLIRA");
   Solver.set_parameters solver solver_param;
   Solver.add solver assertions;
+  
+  Proofview.Goal.enter begin fun gl ->
+
+  let env = Proofview.Goal.env gl in
+  let sigma = Proofview.Goal.sigma gl in
+  let concl = Proofview.Goal.concl gl in
+  let goal_str = econstr2assertion env sigma concl in
+
+  let hyps = Proofview.Goal.hyps gl in
+  let rec hyps2assertion = function
+  | [] -> ""
+  | decl::rest -> 
+      let t = NamedDecl.get_type decl in
+      let id = NamedDecl.get_id decl in
+      ((Names.Id.to_string id) ^ " : " ^ (econstr2assertion env sigma t)) ^ "\n" ^ (hyps2assertion rest)
+      
+  in
+  let hyps_str = hyps2assertion hyps in
+
   let res = Solver.check solver [] in
   match res with
   |	Solver.UNSATISFIABLE -> failwith "UNSAT"
   |	Solver.UNKNOWN -> failwith "UNKNOWN"
   |	Solver.SATISFIABLE ->
       let open Proofview.Notations in
-      msg_in_tactic (Solver.get_help solver) >>= fun () -> Tacticals.New.tclIDTAC 
+      msg_in_tactic (goal_str ^ "\n---------\n" ^ hyps_str) >>= fun () -> Tacticals.New.tclIDTAC 
+
+  end
+

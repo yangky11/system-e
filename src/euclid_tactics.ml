@@ -106,17 +106,19 @@ let euclid_smt : unit Proofview.tactic =
   let rec constr2expr env sigma term constants bounded_var_sorts ctx = 
     let recur t = constr2expr env sigma t constants bounded_var_sorts ctx in
 
+    (*
     print_endline "\n\n**********************";
     List.iter (fun (id, const) -> print_endline id) constants;
     print_endline "----------------------";
     print_endline ("constr2expr: " ^ (constr2str env sigma term));
+    *)
     match Constr.kind term with
     | Rel idx ->
-        print_endline "Rel"; print_endline @@ string_of_int idx; 
+        (*print_endline "Rel"; print_endline @@ string_of_int idx; *)
         mk_bound ctx (idx - 1) (List.nth bounded_var_sorts (idx - 1))
 
     | Var id ->
-        print_endline "Var"; 
+        (*print_endline "Var"; *)
         let id_str = Names.Id.to_string id in
         List.assoc id_str constants
 
@@ -126,7 +128,7 @@ let euclid_smt : unit Proofview.tactic =
     | Cast _ -> print_endline "Cast"; mk_fresh_const ctx "Rel" (mk_sort ctx)
 
     | Prod (name, t1, t2) -> 
-        print_endline "Prod"; 
+        (*print_endline "Prod"; *)
         (match name with
         | Anonymous -> 
             mk_implies ctx (recur t1) (recur t2)
@@ -134,25 +136,23 @@ let euclid_smt : unit Proofview.tactic =
             mk_fresh_const ctx "Rel" (mk_sort ctx))
 
     | Lambda (name, t, body) -> (* existential quantifiers *)
-        print_endline "Lambda";
+        (*print_endline "Lambda";*)
         (match name with
         | Anonymous -> recur body
         | Name id -> 
             let sort = constr2sort t in
-            print_endline @@ Sort.to_string sort;
             expr_of_quantifier @@ mk_exists ctx [sort] [mk_string ctx (Names.Id.to_string id)] 
               (constr2expr env sigma body constants (bounded_var_sorts @ [sort]) ctx) None [] [] None None)
 
     | LetIn _ -> print_endline "LetIn"; mk_fresh_const ctx "Rel" (mk_sort ctx)
 
     | App (func, args) -> 
-        print_endline "App"; 
+        (*print_endline "App"; 
         
         print_endline (constr2str env sigma func);
         Array.iter (fun t -> print_endline (constr2str env sigma t)) args;
-        
+        *)
         let func_str = constr2str env sigma func in
-        print_endline func_str;
         (match func_str with
         | "not" -> 
             mk_not ctx (recur (Array.get args 0))
@@ -210,38 +210,36 @@ let euclid_smt : unit Proofview.tactic =
     let t = EConstr.to_constr sigma (NamedDecl.get_type decl) in
     let id_str = Names.Id.to_string (NamedDecl.get_id decl) in   
     let t_str = constr2str env sigma t in
+    print_endline (id_str ^ " : " ^ t_str);
     match t_str with
     | "Point" -> (id_str, mk_const ctx (mk_string ctx id_str) point_sort) :: constants
     | "Line" -> (id_str, mk_const ctx (mk_string ctx id_str) line_sort) :: constants
     | "Circle" -> (id_str, mk_const ctx (mk_string ctx id_str) circle_sort) :: constants
     | _ -> 
         let assertion = constr2expr env sigma t constants [] ctx in
-        print_endline (Expr.to_string assertion);
         Solver.add solver [assertion];
         constants
   ) hyps [] in
 
   let negated_concl = mk_not ctx (constr2expr env sigma concl constants [] ctx) in
+  print_endline (constr2str env sigma concl);
   Solver.add solver [negated_concl];
 
-  let hyps_str = List.fold_right (fun decl s -> 
-    let t = EConstr.to_constr sigma (NamedDecl.get_type decl) in
-    let id = Names.Id.to_string (NamedDecl.get_id decl) in   
-    s ^ "\n" ^ id ^ " : " ^ (constr2str env sigma t)
-  ) hyps "" in
-  
-  let goal_str = constr2str env sigma concl in
+  let all_assertions = Solver.get_assertions solver in
+  List.iter (fun ass -> print_endline @@ Expr.to_string ass) all_assertions;
 
-  (*let _ = constr2expr env sigma concl ctx in*)
-
+  print_endline "Solving SMT..";
   let res = Solver.check solver [] in
   match res with
-  |	UNSATISFIABLE -> failwith "UNSAT"
+  |	UNSATISFIABLE ->
+      print_endline "UNSAT";
+      (match Solver.get_proof solver with
+      | None -> failwith "" 
+      | Some proof ->
+          print_endline @@ Expr.to_string proof;
+          let open Proofview.Notations in
+          msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC)
   | UNKNOWN -> failwith "UNKNOWN"
-  |	SATISFIABLE ->
-      let open Proofview.Notations in
-      msg_in_tactic (hyps_str ^ "\n----------------\n" ^ goal_str ^ "\n\n") >>= fun () -> Tacticals.New.tclIDTAC
-      (*msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC*)
-
+  |	SATISFIABLE -> failwith "SATISFIABLE"
   end
 

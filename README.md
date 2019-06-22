@@ -5,7 +5,7 @@ System E
 ## Dependencies
 
 * [OPAM](https://opam.ocaml.org/)
-* Build and install [Z3] (https://github.com/Z3Prover/z3) from source, including the OCaml binding, which is not enabled by default
+* Build and install [Z3](https://github.com/Z3Prover/z3) from source, including the OCaml binding, which is not enabled by default
 
 ## Installation
 

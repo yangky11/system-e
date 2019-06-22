@@ -48,9 +48,9 @@ Axiom extending_point : forall (L : Line) (b c : Point),
     (b on_line L) /\ (c on_line L) /\ b <> c -> 
         exists a : Point, (a on_line L) /\ (Between b c a).
 
-Axiom extending_point_not_on_line : forall (L : Line) (b c : Point),
-    (b on_line L) /\ (c on_line L) /\ b <> c -> 
-        exists a : Point, (a on_line L) /\ (Between b c a).
+Axiom extending_point_not_on_line : forall (L M : Line) (b c : Point),
+    (b on_line L) /\ (c on_line L) /\ b <> c /\ L <> M -> 
+        exists a : Point, (a on_line L) /\ (Between b c a) /\ ~(a on_line M).
 
 (*
 5. 

@@ -19,6 +19,7 @@
 ;(declare-fun Area_PPP (Point Point Point) Real)
 ;(declare-const RightAngle Real)
 
+ 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;

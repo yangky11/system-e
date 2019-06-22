@@ -103,8 +103,8 @@ let euclid_smt : unit Proofview.tactic =
   in
 
 
-  let rec constr2expr env sigma term constants bounded_var_sorts ctx = 
-    let recur t = constr2expr env sigma t constants bounded_var_sorts ctx in
+  let rec constr2expr env sigma term constants binders ctx = 
+    let recur t = constr2expr env sigma t constants binders ctx in
 
     (*
     print_endline "\n\n**********************";
@@ -114,11 +114,25 @@ let euclid_smt : unit Proofview.tactic =
     *)
     match Constr.kind term with
     | Rel idx ->
-        (*print_endline "Rel"; print_endline @@ string_of_int idx; *)
-        mk_bound ctx (idx - 1) (List.nth bounded_var_sorts (idx - 1))
+        (*
+        print_endline "Rel"; 
+        print_endline @@ string_of_int idx;
+        print_endline @@ string_of_int (List.length binders);*)
+        let binder_idx = (List.length binders) - idx in
+        (match List.nth binders binder_idx with
+        | None -> failwith ""
+        | Some sort ->
+            let debruijn_idx = List.fold_left (+) 0 
+                                (List.mapi (fun i s -> if i > binder_idx then
+                                                        match s with 
+                                                        | None -> 0
+                                                        | Some _ -> 1
+                                                        else 0) binders) 
+            in
+            mk_bound ctx debruijn_idx sort)
 
     | Var id ->
-        (*print_endline "Var"; *)
+        (*print_endline "Var";*) 
         let id_str = Names.Id.to_string id in
         List.assoc id_str constants
 
@@ -131,23 +145,27 @@ let euclid_smt : unit Proofview.tactic =
         (*print_endline "Prod"; *)
         (match name with
         | Anonymous -> 
-            mk_implies ctx (recur t1) (recur t2)
+            mk_implies ctx (recur t1) (constr2expr env sigma t2 constants (binders @ [None]) ctx)
         | Name id ->
-            mk_fresh_const ctx "Rel" (mk_sort ctx))
+            let id_str = Names.Id.to_string id in
+            let sort = constr2sort t1 in
+            expr_of_quantifier @@ mk_forall ctx [sort] [mk_string ctx id_str]
+              (constr2expr env sigma t2 constants (binders @ [Some sort]) ctx) None [] [] None None)
 
     | Lambda (name, t, body) -> (* existential quantifiers *)
         (*print_endline "Lambda";*)
         (match name with
         | Anonymous -> recur body
         | Name id -> 
+            let id_str = Names.Id.to_string id in
             let sort = constr2sort t in
-            expr_of_quantifier @@ mk_exists ctx [sort] [mk_string ctx (Names.Id.to_string id)] 
-              (constr2expr env sigma body constants (bounded_var_sorts @ [sort]) ctx) None [] [] None None)
+            expr_of_quantifier @@ mk_exists ctx [sort] [mk_string ctx id_str] 
+              (constr2expr env sigma body constants (binders @ [Some sort]) ctx) None [] [] None None)
 
     | LetIn _ -> print_endline "LetIn"; mk_fresh_const ctx "Rel" (mk_sort ctx)
 
     | App (func, args) -> 
-        (*print_endline "App"; 
+        (* print_endline "App"; 
         
         print_endline (constr2str env sigma func);
         Array.iter (fun t -> print_endline (constr2str env sigma t)) args;
@@ -221,8 +239,8 @@ let euclid_smt : unit Proofview.tactic =
         constants
   ) hyps [] in
 
-  let negated_concl = mk_not ctx (constr2expr env sigma concl constants [] ctx) in
   print_endline (constr2str env sigma concl);
+  let negated_concl = mk_not ctx (constr2expr env sigma concl constants [] ctx) in
   Solver.add solver [negated_concl];
 
   let all_assertions = Solver.get_assertions solver in
@@ -239,7 +257,11 @@ let euclid_smt : unit Proofview.tactic =
           print_endline @@ Expr.to_string proof;
           let open Proofview.Notations in
           msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC)
-  | UNKNOWN -> failwith "UNKNOWN"
-  |	SATISFIABLE -> failwith "SATISFIABLE"
+  | UNKNOWN -> 
+      print_endline "UNKNOWN";
+      failwith "UNKNOWN"
+  |	SATISFIABLE -> 
+      print_endline "SAT";
+      failwith "SATISFIABLE"
   end
 

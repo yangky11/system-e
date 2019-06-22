@@ -6,10 +6,11 @@ System E
 
 * [OPAM](https://opam.ocaml.org/)
 * [dune >= 1.10](https://opam.ocaml.org/packages/dune/)
-* Build and install [Z3](https://github.com/Z3Prover/z3) from source, including the OCaml binding which is not enabled by default
+
 
 ## Installation
 
+1. `opam install z3=4.8.1`
 1. `git clone https://github.com/princeton-vl/system-e && cd system-e`
 1. `dune build && dune install`
 

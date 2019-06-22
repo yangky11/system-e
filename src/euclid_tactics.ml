@@ -228,7 +228,7 @@ let euclid_smt : unit Proofview.tactic =
     let t = EConstr.to_constr sigma (NamedDecl.get_type decl) in
     let id_str = Names.Id.to_string (NamedDecl.get_id decl) in   
     let t_str = constr2str env sigma t in
-    print_endline (id_str ^ " : " ^ t_str);
+    (*print_endline (id_str ^ " : " ^ t_str);*)
     match t_str with
     | "Point" -> (id_str, mk_const ctx (mk_string ctx id_str) point_sort) :: constants
     | "Line" -> (id_str, mk_const ctx (mk_string ctx id_str) line_sort) :: constants
@@ -239,14 +239,14 @@ let euclid_smt : unit Proofview.tactic =
         constants
   ) hyps [] in
 
-  print_endline (constr2str env sigma concl);
+  (*print_endline (constr2str env sigma concl);*)
   let negated_concl = mk_not ctx (constr2expr env sigma concl constants [] ctx) in
   Solver.add solver [negated_concl];
 
-  let all_assertions = Solver.get_assertions solver in
+  (*let all_assertions = Solver.get_assertions solver in
   List.iter (fun ass -> print_endline @@ Expr.to_string ass) all_assertions;
 
-  print_endline "Solving SMT..";
+  print_endline "Solving SMT..";*)
   let res = Solver.check solver [] in
   match res with
   |	UNSATISFIABLE ->
@@ -254,7 +254,7 @@ let euclid_smt : unit Proofview.tactic =
       (match Solver.get_proof solver with
       | None -> failwith "" 
       | Some proof ->
-          print_endline @@ Expr.to_string proof;
+          (*print_endline @@ Expr.to_string proof;*)
           let open Proofview.Notations in
           msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC)
   | UNKNOWN -> 

@@ -5,10 +5,10 @@ System E
 ## Dependencies
 
 * [OPAM](https://opam.ocaml.org/)
+* [Z3] (https://github.com/Z3Prover/z3) including the OCaml API
 
 ## Installation
 
-1. `opam install z3` 
 1. `dune build && dune install`
 
 

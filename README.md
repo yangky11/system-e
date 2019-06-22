@@ -2,9 +2,15 @@ System E
 --------------------------------
 
 
+## Dependencies
+
+* [OPAM](https://opam.ocaml.org/)
+
 ## Installation
 
-`dune build && dune install`
+1. `opam install z3` 
+1. `dune build && dune install`
+
 
 # Running
 

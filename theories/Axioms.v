@@ -57,3 +57,19 @@ Tactic Notation "euclid_apply" constr(rule) "as" ident(name) :=
 Tactic Notation "euclid_apply" constr(rule) :=
     let name := fresh "x" in
     euclid_apply' rule name.
+
+(* destruct the conjunction of multiple propositions *)
+Ltac destruct_conj H := 
+    repeat match type of H with
+           | ?P /\ ?Q => let Hname := fresh H in destruct H as [Hname H]
+           end.
+
+(* intros while destructing the hypotheses *)
+Ltac euclid_intros := 
+    repeat match goal with
+           | [ |- forall _ : ?T, _] => idtac T; 
+                                       match T with 
+                                       | ?P /\ ?Q => let Hname := fresh "H" in intro Hname; destruct_conj Hname
+                                       | _ => intro
+                                       end
+           end.

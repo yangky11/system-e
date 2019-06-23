@@ -24,7 +24,7 @@ Proof.
     euclid_apply (MetricInferences.segment_symm b c).
     euclid_apply (MetricInferences.segment_symm a b).
     lra. 
-Qed.
+all: fail. Admitted.
 
 
 Theorem proposition_2 : forall (a b c : Point), a <> b /\ b <> c ->
@@ -52,4 +52,12 @@ Theorem proposition_3 : forall (a b c0 c1 : Point), a <> c0 /\ c0 <> c1 /\ (Segm
 Proof. 
     euclid_intros.
     euclid_apply (proposition_2 a c0 c1) as d.
-Admitted.
+    euclid_apply (ConstructionRules.circle_from_points a d) as DEF.
+    euclid_apply (ConstructionRules.line_from_points a b) as AB.
+    euclid_apply (ConstructionRules.intersection_circle_line_between_points DEF AB a b) as e.
+    euclid_apply (TransferInferences.point_on_circle_onlyif a d e).
+    exists e.
+    split.
+    + assumption.
+    + lra.
+all: fail. Admitted.

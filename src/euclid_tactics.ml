@@ -32,7 +32,6 @@ let constr2str env sigma term =
 
 let euclid_smt : unit Proofview.tactic = 
 
-
   let cfg = [("model", "true"); ("proof", "true"); ("model_validate", "true"); ("well_sorted_check", "true")] in
   let ctx = mk_context cfg in
 
@@ -165,27 +164,36 @@ let euclid_smt : unit Proofview.tactic =
     | LetIn _ -> print_endline "LetIn"; mk_fresh_const ctx "Rel" (mk_sort ctx)
 
     | App (func, args) -> 
-        (* print_endline "App"; 
-        
+        print_endline "App"; 
         print_endline (constr2str env sigma func);
         Array.iter (fun t -> print_endline (constr2str env sigma t)) args;
-        *)
         let func_str = constr2str env sigma func in
         (match func_str with
         | "not" -> 
             mk_not ctx (recur (Array.get args 0))
         | "@eq" -> 
             mk_eq ctx (recur (Array.get args 1)) (recur (Array.get args 2))
+        | "Rgt" ->
+            mk_gt ctx (recur (Array.get args 0)) (recur (Array.get args 1))
         | "ex" ->
             recur (Array.get args 1)
         | "and" -> 
             mk_and ctx [recur (Array.get args 0); recur (Array.get args 1)]
         | "Rplus" ->
             mk_add ctx [recur (Array.get args 0); recur (Array.get args 1)]
-        | "segment2real" -> 
+        | "segment2real"
+        | "segment2real_implicit"
+        | "angle2real"
+        | "angle2real_implicit"
+        | "area2real"
+        | "area2real_implicit" ->
             recur (Array.get args 0)
         | "Segment_PP" -> 
             mk_app ctx segment_pp_func [recur (Array.get args 0); recur (Array.get args 1)]
+        | "Angle_PPP" -> 
+            mk_app ctx angle_ppp_func [recur (Array.get args 0); recur (Array.get args 1); recur (Array.get args 2)]
+        | "Area_PPP" -> 
+            mk_app ctx area_ppp_func [recur (Array.get args 0); recur (Array.get args 1); recur (Array.get args 2)]
         | "On_L" ->
             mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 1)]
         | "SameSide" ->
@@ -217,6 +225,7 @@ let euclid_smt : unit Proofview.tactic =
 
 
   Proofview.Goal.enter begin fun gl ->
+  print_endline "euclid_smt";
 
   let env = Proofview.Goal.env gl in
   let sigma = Proofview.Goal.sigma gl in
@@ -228,7 +237,7 @@ let euclid_smt : unit Proofview.tactic =
     let t = EConstr.to_constr sigma (NamedDecl.get_type decl) in
     let id_str = Names.Id.to_string (NamedDecl.get_id decl) in   
     let t_str = constr2str env sigma t in
-    (*print_endline (id_str ^ " : " ^ t_str);*)
+    print_endline (id_str ^ " : " ^ t_str);
     match t_str with
     | "Point" -> (id_str, mk_const ctx (mk_string ctx id_str) point_sort) :: constants
     | "Line" -> (id_str, mk_const ctx (mk_string ctx id_str) line_sort) :: constants
@@ -239,14 +248,14 @@ let euclid_smt : unit Proofview.tactic =
         constants
   ) hyps [] in
 
-  (*print_endline (constr2str env sigma concl);*)
+  print_endline (constr2str env sigma concl);
   let negated_concl = mk_not ctx (constr2expr env sigma concl constants [] ctx) in
   Solver.add solver [negated_concl];
 
-  (*let all_assertions = Solver.get_assertions solver in
+  let all_assertions = Solver.get_assertions solver in
   List.iter (fun ass -> print_endline @@ Expr.to_string ass) all_assertions;
 
-  print_endline "Solving SMT..";*)
+  print_endline "Solving SMT..";
   let res = Solver.check solver [] in
   match res with
   |	UNSATISFIABLE ->
@@ -259,9 +268,9 @@ let euclid_smt : unit Proofview.tactic =
           msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC)
   | UNKNOWN -> 
       print_endline "UNKNOWN";
-      failwith "UNKNOWN"
+      Tacticals.New.tclFAIL 1000 (Pp.str "UNKNOWN")
   |	SATISFIABLE -> 
       print_endline "SAT";
-      failwith "SATISFIABLE"
+      Tacticals.New.tclFAIL 1000 (Pp.str "SAT")  (* find a suitable error level so that we can capture the error in Coq *)
   end
 

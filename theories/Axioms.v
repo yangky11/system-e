@@ -28,7 +28,8 @@ Ltac elim_conj H :=
     repeat match type of H with
            | ?P /\ ?Q -> ?R => match goal with
                                | [H' : ?P |- _] => replace_hyp H (conj_hyp P Q R H' H)
-                               | _ => let H' := fresh "SMT_VERIFIED_ASSUMPTION" in assert (H' : P); [ eauto 10; euclid_smt; shelve |  idtac ]
+                               | _ => let H' := fresh "SMT_VERIFIED_ASSUMPTION" in 
+                                                assert (H' : P); [ eauto 10; euclid_smt; shelve |  idtac ]
                                end
     end.
 
@@ -40,12 +41,15 @@ Ltac euclid_apply' rule name :=
            | ?P /\ ?Q -> _ => elim_conj lemma
            | forall _ : ?T, _ => match goal with
                                  | [ H : ?T |- _ ] => specialize (lemma H)
-                                 | _ => let H := fresh "SMT_VERIFIED_ASSUMPTION" in assert (H : T); [ eauto 10; euclid_smt; shelve |  idtac ]
+                                 | _ => let H := fresh "SMT_VERIFIED_ASSUMPTION" in 
+                                                 assert (H : T); [ eauto 10; euclid_smt; shelve |  idtac ]
                                  end
-           | exists _ : _, _ => let Hname := fresh "H" name in destruct lemma as [name Hname]; idtac "destructed";
-                                            match type of Hname with
-                                            | _ /\ _ => destruct Hname
-                                            end
+           | exists _ : _, _ => let Hname := fresh "H" name in 
+                                destruct lemma as [name Hname];
+                                match type of Hname with
+                                | _ /\ _ => destruct Hname
+                                | _ => idtac
+                                end
            | _ /\ _ => destruct lemma
            end.
 
@@ -67,8 +71,7 @@ Ltac destruct_conj H :=
 (* intros while destructing the hypotheses *)
 Ltac euclid_intros := 
     repeat match goal with
-           | [ |- forall _ : ?T, _] => idtac T; 
-                                       match T with 
+           | [ |- forall _ : ?T, _] => match T with 
                                        | ?P /\ ?Q => let Hname := fresh "H" in intro Hname; destruct_conj Hname
                                        | _ => intro
                                        end

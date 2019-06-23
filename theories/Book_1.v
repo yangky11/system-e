@@ -51,5 +51,5 @@ Theorem proposition_3 : forall (a b c0 c1 : Point), a <> c0 /\ c0 <> c1 /\ (Segm
     exists e : Point, (Between a e b) /\ (Segment_PP a e == Segment_PP c0 c1)%segment. 
 Proof. 
     euclid_intros.
-    euclid_apply (proposition_2 a c0 c1) as d. idtac "fuck"; destruct H2 as [d Hd].
+    euclid_apply (proposition_2 a c0 c1) as d.
 Admitted.

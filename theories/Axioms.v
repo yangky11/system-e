@@ -70,7 +70,7 @@ Ltac euclid_apply' rule name name2 :=
                                                      end
                                 | _ => idtac
                                 end
-           | _ /\ _ => destruct lemma
+           | _ /\ _ => destruct_conj lemma
            end.
 
 (* apply an inference rule and name the constructed object *)

@@ -74,5 +74,5 @@ If ab = a′b′, bc = b′c′, ca = c′a′, \abc = \a′b′c′, \bca = \b�
 Axiom area_congruence : forall (a b c a' b' c' : Point),
     (Segment_PP a b == Segment_PP a' b')%segment /\ (Segment_PP b c == Segment_PP b' c')%segment /\ 
     (Segment_PP c a == Segment_PP c' a')%segment /\ (Angle_PPP a b c == Angle_PPP a' b' c')%angle /\ 
-    (Angle_PPP b c a == Angle_PPP b' c' a')%angle /\ (Angle_PPP c a b == Angle_PPP c' a' b')%angle /\ 
+    (Angle_PPP b c a == Angle_PPP b' c' a')%angle /\ (Angle_PPP c a b == Angle_PPP c' a' b')%angle ->
         (Area_PPP a b c == Area_PPP a' b' c')%area.

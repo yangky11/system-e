@@ -589,7 +589,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;
-; Diagram-Segment_PPPment transfer axioms
+; Diagram-segment transfer axioms
 ;
 
 (assert
@@ -651,10 +651,10 @@
 
 
 ;
-; Diagram-Angle_PPP transfer axioms
+; Diagram-angle transfer axioms
 ;
 
-; colinear iff Angle_PPP is equal to 0
+; colinear iff angle is equal to 0
 (assert
     (forall ((a Point) (b Point) (c Point) (L Line))
         (=> 
@@ -667,7 +667,7 @@
             (= 
                 (and 
                     (On_L c L) 
-                    (not (Between c a b))
+                    (not (Between b a c))
                 )
                 (= (Angle_PPP b a c) 0.0)
             )
@@ -702,7 +702,7 @@
 )
 
 
-; def right Angle_PPP (and all right Angle_PPPs are equal)
+; def right angle (and all right angle are equal)
 (assert
     (forall ((a Point) (b Point) (c Point) (d Point) (L Line))
         (=> 
@@ -736,7 +736,7 @@
 )
 
 
-; Area_PPPs sum
+; angle sum
 (assert
     (forall ((a Point) (b Point) (c Point) (d Point) (L Line))
         (=> 

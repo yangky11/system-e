@@ -78,16 +78,9 @@ let euclid_smt : unit Proofview.tactic =
   let decl_names = [between_sym; on_l_sym; on_c_sym; inside_sym; center_sym; sameside_sym; intersects_ll_sym; intersects_lc_sym; intersects_cc_sym; segment_pp_sym; angle_ppp_sym; area_ppp_sym; rightangle_sym] in
   let decls = [between_func; on_l_func; on_c_func; inside_func; center_func; sameside_func; intersects_ll_func; intersects_lc_func; intersects_cc_func; segment_pp_func; angle_ppp_func; area_ppp_func; rightangle_const] in
 
-  let assertions = AST.ASTVector.to_expr_list 
+  let background_theory = AST.ASTVector.to_expr_list 
     (SMT.parse_smtlib2_file ctx "/Users/yangky/Desktop/Research/Project-A/system-e/src/e.smt2" 
       sort_names sorts decl_names decls) in
-
-  let solver = Solver.mk_solver ctx None in
-  let solver_param = Params.mk_params ctx in
-  Params.add_symbol solver_param (mk_string ctx "logic") (mk_string ctx "AUFLIRA");
-  Solver.set_parameters solver solver_param;
-  Solver.add solver assertions;
-  
 
   let constr2sort term = 
     match Constr.kind term with
@@ -100,7 +93,6 @@ let euclid_smt : unit Proofview.tactic =
         | _ -> failwith "")
     | _ -> failwith ""
   in
-
 
   let rec constr2expr env sigma term constants binders ctx = 
     let recur t = constr2expr env sigma t constants binders ctx in
@@ -226,6 +218,12 @@ let euclid_smt : unit Proofview.tactic =
 
   Proofview.Goal.enter begin fun gl ->
   print_endline "euclid_smt";
+  
+  let solver = Solver.mk_solver ctx None in
+  let solver_param = Params.mk_params ctx in
+  Params.add_symbol solver_param (mk_string ctx "logic") (mk_string ctx "AUFLIRA");
+  Solver.set_parameters solver solver_param;
+  Solver.add solver background_theory;
 
   let env = Proofview.Goal.env gl in
   let sigma = Proofview.Goal.sigma gl in

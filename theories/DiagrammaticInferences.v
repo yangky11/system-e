@@ -126,8 +126,8 @@ then either a and c are on the same side of L, or b and c are on the same
 side of L.
 *)
 Axiom same_side_pigeon_hole : forall (a b c : Point) (L : Line), 
-    ~(a on_line L) /\ ~(b on_line L) /\ ~(c on_line L) /\ ~(SameSide a b L) ->
-        (SameSide a c L) \/ (SameSide b c L).
+    ~(a on_line L) /\ ~(b on_line L) /\ ~(c on_line L) ->
+        (SameSide a b L) \/ (SameSide a c L) \/ (SameSide b c L).
 
 (* Pasch axioms *)
 

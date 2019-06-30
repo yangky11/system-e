@@ -6,7 +6,7 @@ Require Export ConstructionRules.
 Require Export DiagrammaticInferences.
 Require Export MetricInferences.
 Require Export TransferInferences.
-(*Require Export SuperpositionInferences.*)
+Require Export SuperpositionInferences.
 
 Require Export Program.Tactics.
 Require Export Psatz.
@@ -86,3 +86,31 @@ Tactic Notation "euclid_apply" constr(rule) :=
     let name := fresh "x" in
     let name2 := fresh "y" in
     euclid_apply' rule name name2.
+
+Require Import Logic.Classical_Prop.
+Require Import Logic.Classical_Pred_Type.
+
+Ltac destruct_neg H := repeat match type of H with
+                       | ~ (forall t : _, _) => apply not_all_ex_not in H; 
+                                                let name := fresh t in 
+                                                destruct H as [name H]
+                       end.
+
+
+(* proof by case analysis *)
+Ltac euclid_case G :=  let phi := fresh "phi" in 
+                       let not_phi := fresh "not_phi" in 
+                       pose proof (classic G) as [phi | not_phi]; 
+                       destruct_neg not_phi.
+
+(* proof by contradiction *)
+Ltac euclid_contradict := match goal with
+                          | |- ?G => euclid_case G; try trivial; exfalso
+                          end.
+
+Tactic Notation "euclid_superposition" constr(rule) "as" ident(name) ident(name2) :=
+    match goal with
+               | |- exists _, _ => fail 999
+               | |- _ => idtac
+    end;
+    euclid_apply rule as b' c'.

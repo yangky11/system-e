@@ -171,6 +171,8 @@ let euclid_smt : unit Proofview.tactic =
             recur (Array.get args 1)
         | "and" -> 
             mk_and ctx [recur (Array.get args 0); recur (Array.get args 1)]
+        | "or" ->
+            mk_or ctx [recur (Array.get args 0); recur (Array.get args 1)]
         | "Rplus" ->
             mk_add ctx [recur (Array.get args 0); recur (Array.get args 1)]
         | "segment2real"

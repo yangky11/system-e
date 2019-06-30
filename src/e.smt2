@@ -977,6 +977,5 @@
 )
 
 
-
 ;(check-sat)
 ;(get-model)

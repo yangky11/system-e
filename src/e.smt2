@@ -771,6 +771,23 @@
     )
 )
 
+; angle_superposition
+(assert 
+    (forall ((a Point) (b Point) (c Point) (d Point) (L Line))
+        (=>
+            (and
+                (On_L a L)
+                (On_L b L)
+                (not (= a b))
+                (not (= d a))
+                (= (Angle_PPP b a c) (Angle_PPP b a d))
+                (= (Segment_PP a c) (Segment_PP a d))
+            )
+            (= c d)
+        )
+    )
+)
+
 ; sum_angles_if
 (assert
     (forall ((a Point) (b Point) (c Point) (d Point) (L Line) (M Line))

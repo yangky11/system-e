@@ -34,6 +34,12 @@ Ltac euclid_intros :=
                                        end
            end.
 
+Tactic Notation "euclid_trivial" := eauto 10; euclid_smt; shelve.
+
+Tactic Notation "euclid_trivial" constr(fact) := 
+    let H := fresh "SMT_VERIFIED_ASSUMPTION" in
+    assert (H : fact); [eauto 10; euclid_smt; shelve |  idtac ].
+
 (*
 Combine H : ?P /\ ?Q -> _ and H' : ?P into ?Q -> _
 When there is not such H', call SMT to check if H' can be deduced.
@@ -42,8 +48,7 @@ Ltac elim_conj H :=
     repeat match type of H with
            | ?P /\ ?Q -> ?R => match goal with
                                | [H' : ?P |- _] => replace_hyp H (conj_hyp P Q R H' H)
-                               | _ => let H' := fresh "SMT_VERIFIED_ASSUMPTION" in 
-                                                assert (H' : P); [ eauto 10; euclid_smt; shelve |  idtac ]
+                               | _ => euclid_trivial P
                                end
     end.
 
@@ -55,8 +60,7 @@ Ltac euclid_apply' rule name name2 :=
            | ?P /\ ?Q -> _ => elim_conj lemma
            | ?T -> _ => match goal with
                                  | [ H : ?T |- _ ] => specialize (lemma H)
-                                 | _ => let H := fresh "SMT_VERIFIED_ASSUMPTION" in
-                                                 assert (H : T); [eauto 10; euclid_smt; shelve |  idtac ]
+                                 | _ => euclid_trivial T
                                  end
            | exists _ : _, _ => let Hname := fresh "H" name in 
                                 destruct lemma as [name Hname];
@@ -113,4 +117,4 @@ Tactic Notation "euclid_superposition" constr(rule) "as" ident(name) ident(name2
                | |- exists _, _ => fail 999
                | |- _ => idtac
     end;
-    euclid_apply rule as b' c'.
+    euclid_apply rule as name name2.

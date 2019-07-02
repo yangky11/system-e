@@ -58,6 +58,13 @@ Axiom degenerated_angle_onlyif : forall (a b c : Point) (L : Line),
     (a <> b) /\ (a <> c) /\ (a on_line L) /\ (b on_line L) /\ (angle2real (Angle_PPP b a c) = 0) ->
         (c on_line L) /\ ~(Between b a c).
 
+(* addtional axiom not in sysetem e *)
+Axiom angle_superposition : forall (a b c d : Point) (L : Line), 
+    a on_line L /\ b on_line L /\ a <> b /\ d <> a /\
+    (Angle_PPP b a c == Angle_PPP b a d)%angle /\ 
+    (Segment_PP a c == Segment_PP a d)%segment ->
+    c = d.
+
 (*
 2. 
 Suppose a is on L and M, b is on L, c is on M, a != b, a != c, d is not on

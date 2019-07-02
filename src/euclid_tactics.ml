@@ -127,10 +127,10 @@ let euclid_smt : unit Proofview.tactic =
         let id_str = Names.Id.to_string id in
         List.assoc id_str constants
 
-    | Meta _ -> print_endline "Meta"; mk_fresh_const ctx "Meta" (mk_sort ctx)
-    | Evar _ -> print_endline "Evar"; mk_fresh_const ctx "Evar" (mk_sort ctx)
-    | Sort _ -> print_endline "Sort"; mk_fresh_const ctx "Rel" (mk_sort ctx)
-    | Cast _ -> print_endline "Cast"; mk_fresh_const ctx "Rel" (mk_sort ctx)
+    | Meta _ -> print_endline "Meta"; failwith "Meta"
+    | Evar _ -> print_endline "Evar"; failwith "Evar"
+    | Sort _ -> print_endline "Sort"; failwith "Sort"
+    | Cast _ -> print_endline "Cast"; failwith "Cast"
 
     | Prod (name, t1, t2) -> 
         (*print_endline "Prod"; *)
@@ -153,7 +153,7 @@ let euclid_smt : unit Proofview.tactic =
             expr_of_quantifier @@ mk_exists ctx [sort] [mk_string ctx id_str] 
               (constr2expr env sigma body constants (binders @ [Some sort]) ctx) None [] [] None None)
 
-    | LetIn _ -> print_endline "LetIn"; mk_fresh_const ctx "Rel" (mk_sort ctx)
+    | LetIn _ -> print_endline "LetIn"; failwith "LetIn"
 
     | App (func, args) -> 
         print_endline "App"; 
@@ -167,6 +167,8 @@ let euclid_smt : unit Proofview.tactic =
             mk_eq ctx (recur (Array.get args 1)) (recur (Array.get args 2))
         | "Rgt" ->
             mk_gt ctx (recur (Array.get args 0)) (recur (Array.get args 1))
+        | "Rlt" ->
+            mk_lt ctx (recur (Array.get args 0)) (recur (Array.get args 1))
         | "ex" ->
             recur (Array.get args 1)
         | "and" -> 
@@ -208,13 +210,21 @@ let euclid_smt : unit Proofview.tactic =
             mk_app ctx intersects_cc_func [recur (Array.get args 0); recur (Array.get args 1)]
         | _ -> failwith func_str)
 
-    | Const _ -> print_endline "Const"; mk_fresh_const ctx "Const" (mk_sort ctx)
-    | Ind _ -> print_endline "Ind"; mk_fresh_const ctx "Ind" (mk_sort ctx)
-    | Construct _ -> print_endline "Construct"; mk_fresh_const ctx "Construct" (mk_sort ctx)
-    | Case _ -> print_endline "Case"; mk_fresh_const ctx "Case" (mk_sort ctx)
-    | Fix _ -> print_endline "Fix"; mk_fresh_const ctx "Fix" (mk_sort ctx)
-    | CoFix _ -> print_endline "CoFix"; mk_fresh_const ctx "CoFix" (mk_sort ctx)
-    | Proj _ -> print_endline "Proj"; mk_fresh_const ctx "Proj" (mk_sort ctx)
+    | Const _ -> print_endline "Const"; failwith "Const"
+
+    | Ind ((induct, _), _) -> 
+        print_endline "Ind"; 
+        let s = Names.MutInd.to_string induct in
+        (match s with
+        | "Coq.Init.Logic.False" -> mk_false ctx
+        | "Coq.Init.Logic.True" -> mk_true ctx
+        | _ -> failwith "Ind")
+
+    | Construct _ -> print_endline "Construct"; failwith "Construct"
+    | Case _ -> print_endline "Case"; failwith "Case"
+    | Fix _ -> print_endline "Fix"; failwith "Fix"
+    | CoFix _ -> print_endline "CoFix"; failwith "CoFix"
+    | Proj _ -> print_endline "Proj"; failwith "Proj"
   in
 
 

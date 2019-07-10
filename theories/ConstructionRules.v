@@ -37,6 +37,11 @@ Axiom point_between_points_not_on_line : forall (L M : Line) (b c : Point),
     (b on_line L) /\ (c on_line L) /\ b <> c /\ L <> M -> 
         exists a : Point, (a on_line L) /\ (Between b a c) /\ ~(a on_line M).
 
+(* different from the original System E *)
+Axiom point_between_points_shorter_than : forall (L : Line) (b c d e : Point),
+    (b on_line L) /\ (c on_line L) /\ (b <> c) /\ (d <> e) ->
+        exists a : Point, (a on_line L) /\ (Between b a c) /\ (Segment_PP b a < Segment_PP d e).
+
 (*
 4. 
 Let a be a point on L extending the segment from b to c [with a distinct

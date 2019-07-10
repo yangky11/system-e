@@ -31,8 +31,9 @@ let constr2str env sigma term =
 
 
 let euclid_smt : unit Proofview.tactic = 
+  print_endline "initializing euclid_smt..";
 
-  let cfg = [("model", "true"); ("proof", "true"); ("model_validate", "true"); ("well_sorted_check", "true")] in
+  let cfg = [("model", "true"); ("proof", "false"); ("model_validate", "true"); ("well_sorted_check", "true")] in
   let ctx = mk_context cfg in
 
   let bool_sort = mk_sort ctx in
@@ -97,18 +98,8 @@ let euclid_smt : unit Proofview.tactic =
   let rec constr2expr env sigma term constants binders ctx = 
     let recur t = constr2expr env sigma t constants binders ctx in
 
-    (*
-    print_endline "\n\n**********************";
-    List.iter (fun (id, const) -> print_endline id) constants;
-    print_endline "----------------------";
-    print_endline ("constr2expr: " ^ (constr2str env sigma term));
-    *)
     match Constr.kind term with
     | Rel idx ->
-        (*
-        print_endline "Rel"; 
-        print_endline @@ string_of_int idx;
-        print_endline @@ string_of_int (List.length binders);*)
         let binder_idx = (List.length binders) - idx in
         (match List.nth binders binder_idx with
         | None -> failwith ""
@@ -123,7 +114,6 @@ let euclid_smt : unit Proofview.tactic =
             mk_bound ctx debruijn_idx sort)
 
     | Var id ->
-        (*print_endline "Var";*) 
         let id_str = Names.Id.to_string id in
         List.assoc id_str constants
 
@@ -133,7 +123,6 @@ let euclid_smt : unit Proofview.tactic =
     | Cast _ -> print_endline "Cast"; failwith "Cast"
 
     | Prod (name, t1, t2) -> 
-        (*print_endline "Prod"; *)
         (match name with
         | Anonymous -> 
             mk_implies ctx (recur t1) (constr2expr env sigma t2 constants (binders @ [None]) ctx)
@@ -144,7 +133,6 @@ let euclid_smt : unit Proofview.tactic =
               (constr2expr env sigma t2 constants (binders @ [Some sort]) ctx) None [] [] None None)
 
     | Lambda (name, t, body) -> (* existential quantifiers *)
-        (*print_endline "Lambda";*)
         (match name with
         | Anonymous -> recur body
         | Name id -> 
@@ -156,9 +144,10 @@ let euclid_smt : unit Proofview.tactic =
     | LetIn _ -> print_endline "LetIn"; failwith "LetIn"
 
     | App (func, args) -> 
+        (*
         print_endline "App"; 
         print_endline (constr2str env sigma func);
-        Array.iter (fun t -> print_endline (constr2str env sigma t)) args;
+        Array.iter (fun t -> print_endline (constr2str env sigma t)) args;*)
         let func_str = constr2str env sigma func in
         (match func_str with
         | "not" -> 
@@ -169,6 +158,8 @@ let euclid_smt : unit Proofview.tactic =
             mk_gt ctx (recur (Array.get args 0)) (recur (Array.get args 1))
         | "Rlt" ->
             mk_lt ctx (recur (Array.get args 0)) (recur (Array.get args 1))
+        | "Rle" ->
+            mk_le ctx (recur (Array.get args 0)) (recur (Array.get args 1))
         | "ex" ->
             recur (Array.get args 1)
         | "and" -> 
@@ -213,7 +204,6 @@ let euclid_smt : unit Proofview.tactic =
     | Const _ -> print_endline "Const"; failwith "Const"
 
     | Ind ((induct, _), _) -> 
-        print_endline "Ind"; 
         let s = Names.MutInd.to_string induct in
         (match s with
         | "Coq.Init.Logic.False" -> mk_false ctx
@@ -229,11 +219,20 @@ let euclid_smt : unit Proofview.tactic =
 
 
   Proofview.Goal.enter begin fun gl ->
-  print_endline "euclid_smt";
+  print_endline "calling euclid_smt..";
   
-  let solver = Solver.mk_solver ctx None in
+  let solver = Solver.mk_simple_solver ctx in
   let solver_param = Params.mk_params ctx in
+
+  
+  Params.add_bool solver_param (mk_string ctx "mbqi") true;
+  Params.add_bool solver_param (mk_string ctx "ematching") true;
+  (*
+  Params.add_int solver_param (mk_string ctx "mbqi.max_cexs") 3;
+  Params.add_int solver_param (mk_string ctx "mbqi.force_template") 0;*)
+  (*
   Params.add_symbol solver_param (mk_string ctx "logic") (mk_string ctx "AUFLIRA");
+  *)
   Solver.set_parameters solver solver_param;
   Solver.add solver background_theory;
 
@@ -254,28 +253,33 @@ let euclid_smt : unit Proofview.tactic =
     | "Circle" -> (id_str, mk_const ctx (mk_string ctx id_str) circle_sort) :: constants
     | _ -> 
         let assertion = constr2expr env sigma t constants [] ctx in
+        print_endline ("\t" ^ Expr.to_string assertion);
         Solver.add solver [assertion];
         constants
   ) hyps [] in
 
-  print_endline (constr2str env sigma concl);
   let negated_concl = mk_not ctx (constr2expr env sigma concl constants [] ctx) in
   Solver.add solver [negated_concl];
+  print_endline "neg_concl";
+  print_endline ("\t" ^ Expr.to_string negated_concl);
 
   let all_assertions = Solver.get_assertions solver in
-  List.iter (fun ass -> print_endline @@ Expr.to_string ass) all_assertions;
+  List.iter (fun ass -> print_endline ("(assert\n" ^ Expr.to_string ass ^ "\n)")) all_assertions;
 
   print_endline "Solving SMT..";
   let res = Solver.check solver [] in
   match res with
   |	UNSATISFIABLE ->
       print_endline "UNSAT";
+      let open Proofview.Notations in
+      msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC
+      (*
       (match Solver.get_proof solver with
       | None -> failwith "" 
       | Some proof ->
-          (*print_endline @@ Expr.to_string proof;*)
+          print_endline @@ Expr.to_string proof;
           let open Proofview.Notations in
-          msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC)
+          msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC)*)
   | UNKNOWN -> 
       print_endline "UNKNOWN";
       Tacticals.New.tclFAIL 1000 (Pp.str "UNKNOWN")

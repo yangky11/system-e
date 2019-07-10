@@ -190,7 +190,7 @@ then b and c are on the same side of N.
 *)
 Axiom triple_incidence_2 : forall (L M N : Line) (a b c d : Point),
     (a on_line L) /\ (a on_line M) /\ (a on_line N) /\ (b on_line L) /\ 
-    (c on_line M) /\ (d on_line N) /\ (SameSide c d L) /\ ~(SameSide b d N) /\ 
+    (c on_line M) /\ (d on_line N) /\ (SameSide c d L) /\ ~(SameSide b d M) /\ 
     ~(d on_line M) /\ (b <> a) -> 
         SameSide b c N.
 

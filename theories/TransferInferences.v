@@ -6,10 +6,15 @@ Require Import Sorts.
 1. 
 If b is between a and c, then ab + bc = ac.
 *)
-Axiom between : forall (a b c : Point),
+Axiom between_if : forall (a b c : Point),
     (Between a b c) -> 
         segment2real (Segment_PP a b) + segment2real (Segment_PP b c) = segment2real (Segment_PP a c).
 
+Axiom between_onlyif : forall (a b c : Point), 
+    a <> b /\ b <> c /\ c <> a /\
+    segment2real (Segment_PP a b) + segment2real (Segment_PP b c) = segment2real (Segment_PP a c) ->
+        (Between a b c).
+        
 (*
 2. 
 If a is the center of α and β, b is on α, c is on β, and ab = ac, then α = β.

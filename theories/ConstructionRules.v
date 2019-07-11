@@ -57,6 +57,10 @@ Axiom extending_point_not_on_line : forall (L M : Line) (b c : Point),
     (b on_line L) /\ (c on_line L) /\ b <> c /\ L <> M -> 
         exists a : Point, (a on_line L) /\ (Between b c a) /\ ~(a on_line M).
 
+Axiom extending_point_equal : forall (L : Line) (b c : Point),
+    (b on_line L) /\ (c on_line L) /\ b <> c -> 
+        exists a : Point, (a on_line L) /\ (Between b c a) /\ (Segment_PP b c == Segment_PP c a)%segment.
+
 (*
 5. 
 Let a be a point on the same side of L as b [distinct from. . . ]

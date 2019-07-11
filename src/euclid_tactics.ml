@@ -210,7 +210,12 @@ let euclid_smt : unit Proofview.tactic =
         | "Coq.Init.Logic.True" -> mk_true ctx
         | _ -> failwith "Ind")
 
-    | Construct _ -> print_endline "Construct"; failwith "Construct"
+    | Construct (((induct, _), idx), _) ->  
+        let s = Names.MutInd.to_string induct in
+        (match s, idx with
+        | "SystemE.Sorts.Angle", 2 -> mk_app ctx rightangle_const []
+        | _ -> failwith "Construct")
+
     | Case _ -> print_endline "Case"; failwith "Case"
     | Fix _ -> print_endline "Fix"; failwith "Fix"
     | CoFix _ -> print_endline "CoFix"; failwith "CoFix"

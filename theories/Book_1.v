@@ -169,14 +169,14 @@ Proof.
     euclid_trivial (a <> c).
 
     euclid_apply (ConstructionRules.line_from_points a c) as AC.
-    euclid_apply (ConstructionRules.extending_point AC a c) as e.
+    euclid_apply (ConstructionRules.extend_point AC a c) as e.
     euclid_apply (ConstructionRules.line_from_points a d) as AD.
-    euclid_apply (ConstructionRules.extending_point AD a d) as f.
+    euclid_apply (ConstructionRules.extend_point AD a d) as f.
     euclid_apply (proposition_5 a c d e f).
     euclid_apply (ConstructionRules.line_from_points b c) as BC.
-    euclid_apply (ConstructionRules.extending_point BC b c) as g.
+    euclid_apply (ConstructionRules.extend_point BC b c) as g.
     euclid_apply (ConstructionRules.line_from_points b d) as BD.
-    euclid_apply (ConstructionRules.extending_point BD b d) as h.
+    euclid_apply (ConstructionRules.extend_point BD b d) as h.
     euclid_apply (proposition_5 b c d g h).
     euclid_apply (ConstructionRules.line_from_points c d) as CD.
     euclid_case (SameSide a b CD).
@@ -331,7 +331,7 @@ Proof.
     euclid_intros.
     euclid_case (BC = BD).
     + assumption.
-    + euclid_apply (ConstructionRules.extending_point BC c b) as e.
+    + euclid_apply (ConstructionRules.extend_point BC c b) as e.
         euclid_apply (ConstructionRules.line_from_points a b) as AB.
         euclid_apply (proposition_13 BC AB a b e c).
         (* diff *)
@@ -363,11 +363,12 @@ Proof.
     + euclid_apply (proposition_10 b c) as e.
         euclid_apply (ConstructionRules.line_from_points a e) as AE.
         (* diff *)
-        euclid_apply (ConstructionRules.extending_point_equal AE a e) as f.
+        euclid_apply (ConstructionRules.extend_point_longer AE a e (Segment_PP a e)) as f'.
+        euclid_apply (proposition_3 e f' a e) as f.
         euclid_apply (proposition_15 b c a f e BC AE).
         euclid_apply (proposition_4 e b a e c f).
         euclid_apply (ConstructionRules.line_from_points a c) as AC.
-        euclid_apply (ConstructionRules.extending_point AC a c) as g.
+        euclid_apply (ConstructionRules.extend_point AC a c) as g.
         euclid_apply (TransferInferences.sum_angles_onlyif c b g f BC AC).
         euclid_apply (proposition_15 a g b d c AC BC). 
         euclid_apply (ConstructionRules.line_from_points a b) as AB.
@@ -375,7 +376,8 @@ Proof.
     + euclid_apply (proposition_10 a c) as e.
         euclid_apply (ConstructionRules.line_from_points b e) as BE.
         (* diff *)
-        euclid_apply (ConstructionRules.extending_point_equal BE b e) as f.
+        euclid_apply (ConstructionRules.extend_point_longer BE b e (Segment_PP b e)) as f'.
+        euclid_apply (proposition_3 e f' b e) as f.
         euclid_apply (ConstructionRules.line_from_points a c) as AC.
         euclid_apply (proposition_15 a c b f e AC BE).
         euclid_apply (proposition_4 e a b e c f).
@@ -408,7 +410,7 @@ Proof.
     euclid_apply (ConstructionRules.line_from_points a d) as AD.
     euclid_apply (proposition_16 b c d a AD). 
     euclid_apply (ConstructionRules.line_from_points a b) as AB.
-    euclid_apply (ConstructionRules.extending_point AB a b) as e.
+    euclid_apply (ConstructionRules.extend_point AB a b) as e.
     euclid_apply (proposition_5 a b d e c).
     euclid_apply (ConstructionRules.line_from_points b c) as BC.
     euclid_apply (TransferInferences.sum_angles_if b a c d AB BC).
@@ -424,10 +426,29 @@ Proof.
     euclid_apply (ConstructionRules.line_from_points a b) as AB.
     euclid_apply (ConstructionRules.line_from_points a c) as AC.
     euclid_case (Segment_PP a c == Segment_PP a b)%segment.
-    +  euclid_apply (ConstructionRules.extending_point AB a b) as d.
-        euclid_apply (ConstructionRules.extending_point AC a c) as e.
+    +  euclid_apply (ConstructionRules.extend_point AB a b) as d.
+        euclid_apply (ConstructionRules.extend_point AC a c) as e.
         euclid_apply (proposition_5 a b c d e).
         euclid_trivial.
     + euclid_apply (proposition_18 a c b AB).
         euclid_trivial.
+all:fail. Admitted.
+
+
+Theorem proposition_20 : forall (a b c : Point) (BC : Line),
+    b <> c /\ b on_line BC /\ c on_line BC /\ ~(a on_line BC) -> 
+    (Segment_PP b a + Segment_PP a c > Segment_PP b c).
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.line_from_points b a) as BA.
+    euclid_apply (ConstructionRules.extend_point_longer BA b a (Segment_PP c a)) as d'.
+    euclid_apply (proposition_3 a d' a c) as d.
+    euclid_apply (ConstructionRules.line_from_points a c) as AC.
+    euclid_apply (ConstructionRules.extend_point AC a c) as c'.
+    euclid_apply (proposition_5 a c d c' d').
+    euclid_apply (ConstructionRules.line_from_points c d) as CD.
+    euclid_apply (TransferInferences.sum_angles_onlyif c b d a BC CD).
+    euclid_trivial (Angle_PPP b c d > Angle_PPP a d c).
+    euclid_apply (proposition_19 b c d).
+    euclid_trivial.
 all:fail. Admitted.

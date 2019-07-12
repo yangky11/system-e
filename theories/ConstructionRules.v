@@ -49,17 +49,17 @@ from. . . ].
 Prerequisites: b is on L, c is on L, b != c, [L is distinct from lines . . . ]
 Conclusion: a is on L, c is between b and a, [a is distinct from. . . ]
 *)
-Axiom extending_point : forall (L : Line) (b c : Point),
+Axiom extend_point : forall (L : Line) (b c : Point),
     (b on_line L) /\ (c on_line L) /\ b <> c -> 
         exists a : Point, (a on_line L) /\ (Between b c a).
 
-Axiom extending_point_not_on_line : forall (L M : Line) (b c : Point),
+Axiom extend_point_not_on_line : forall (L M : Line) (b c : Point),
     (b on_line L) /\ (c on_line L) /\ b <> c /\ L <> M -> 
         exists a : Point, (a on_line L) /\ (Between b c a) /\ ~(a on_line M).
 
-Axiom extending_point_equal : forall (L : Line) (b c : Point),
+Axiom extend_point_longer : forall (L : Line) (b c : Point) (s : Segment),
     (b on_line L) /\ (c on_line L) /\ b <> c -> 
-        exists a : Point, (a on_line L) /\ (Between b c a) /\ (Segment_PP b c == Segment_PP c a)%segment.
+        exists a : Point, (a on_line L) /\ (Between b c a) /\ (Segment_PP c a > s)%segment.
 
 (*
 5. 

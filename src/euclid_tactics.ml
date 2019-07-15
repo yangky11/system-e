@@ -232,9 +232,8 @@ let euclid_smt : unit Proofview.tactic =
   
   Params.add_bool solver_param (mk_string ctx "mbqi") true;
   Params.add_bool solver_param (mk_string ctx "ematching") true;
-  (*
   Params.add_int solver_param (mk_string ctx "mbqi.max_cexs") 3;
-  Params.add_int solver_param (mk_string ctx "mbqi.force_template") 0;*)
+  Params.add_int solver_param (mk_string ctx "mbqi.force_template") 0;
   (*
   Params.add_symbol solver_param (mk_string ctx "logic") (mk_string ctx "AUFLIRA");
   *)

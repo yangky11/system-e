@@ -47,15 +47,12 @@
 ; center_unique
 (assert
     (forall ((a Point) (b Point) (alpha Circle))
-        (!
-            (=> 
-                (and 
-                    (Center a alpha) 
-                    (Center b alpha)
-                )
-                (= a b)
+        (=> 
+            (and 
+                (Center a alpha) 
+                (Center b alpha)
             )
-            :pattern ((Center a alpha) (Center b alpha))
+            (= a b)
         )
     )
 )
@@ -583,12 +580,9 @@
 ; zero_segment_onlyif
 (assert
     (forall ((a Point) (b Point)) 
-        (!
-            (=> 
-                (= a b)
-                (= (Segment_PP a b) 0.0)
-            )
-            :pattern ((= a b))
+        (=> 
+            (= a b)
+            (= (Segment_PP a b) 0.0)
         )
     )
 )
@@ -1043,17 +1037,14 @@
 ; degenerated_area_onlyif
 (assert
     (forall ((a Point) (b Point) (c Point) (L Line))
-        (!
-            (=> 
-                (and 
-                    (On_L a L) 
-                    (On_L b L) 
-                    (not (= a b))
-                    (On_L c L)
-                )    
-                (= (Area_PPP a b c) 0.0)
-            )
-            :pattern ((On_L a L) (On_L b L) (On_L c L))
+        (=> 
+            (and 
+                (On_L a L) 
+                (On_L b L) 
+                (not (= a b))
+                (On_L c L)
+            )    
+            (= (Area_PPP a b c) 0.0)
         )
     )
 )

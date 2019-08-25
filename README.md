@@ -5,6 +5,7 @@ System E
 ## Dependencies
 
 * [OPAM](https://opam.ocaml.org/)
+* [Coq == 8.10](https://github.com/coq/coq)
 * [dune >= 1.10](https://opam.ocaml.org/packages/dune/)
 
 

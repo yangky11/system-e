@@ -5,9 +5,9 @@ System E
 ## Dependencies
 
 * [OPAM](https://opam.ocaml.org/)
-* [Coq == 8.9](https://opam.ocaml.org/packages/coq/) installed via OPAM
-* [dune >= 1.10](https://opam.ocaml.org/packages/dune/) installed via OPAM
-* [z3 == 4.8.1](https://opam.ocaml.org/packages/z3/z3.4.8.1/) installed via OPAM
+* [Coq == 8.9.1](https://opam.ocaml.org/packages/coq/) installed via OPAM: `opam install coq=8.9.1`
+* [dune >= 1.10.0](https://opam.ocaml.org/packages/dune/) installed via OPAM: `opam install dune=1.10.0`
+* [z3 == 4.8.1](https://opam.ocaml.org/packages/z3/z3.4.8.1/) installed via OPAM: `opam install z3=4.8.1`
 
 
 ## Installation

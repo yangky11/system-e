@@ -259,7 +259,13 @@ then L and M intersect.
 *)
 Axiom intersection_lines: forall (a b : Point) (L M : Line),
     ~(a on_line L) /\ ~(b on_line L) /\ ~(SameSide a b L) /\ (a on_line M) /\ (b on_line M) ->
-        Intersects_LL L M.
+        IntersectsLL L M.
+
+Axiom intersection_lines_common_point : forall (a : Point) (L M : Line),
+    a on_line L /\ a on_line M /\ L <> M ->
+        IntersectsLL L M.
+
+Axiom intersection_symm : forall (L M : Line), IntersectsLL L M -> IntersectsLL M L.
 
 (*
 2. 
@@ -269,13 +275,13 @@ of L, then L and α intersect.
 Axiom intersection_circle_line_1: forall (a b : Point) (alpha : Circle) (L: Line),
     ((a on_circle alpha) \/ (a in_circle alpha)) /\ ((b on_circle alpha) \/ (b in_circle alpha)) /\ 
     ~(a on_line L) /\ ~(b on_line L) /\ ~(SameSide a b L) -> 
-        Intersects_LC L alpha.
+        IntersectsLC L alpha.
 
 (*
 3. If a is inside α and on L, then L and α intersect.
 *)
 Axiom intersection_circle_line_2: forall (a : Point) (alpha : Circle) (L: Line), 
-    (a in_circle alpha) /\ (a on_line L) -> Intersects_LC L alpha.
+    (a in_circle alpha) /\ (a on_line L) -> IntersectsLC L alpha.
 
 (*
 4. If a is on or inside α, b is on or inside α, a is inside β, and b is outside β,
@@ -284,14 +290,14 @@ then α and β intersect.
 Axiom intersection_circle_circle_1: forall (a b : Point) (alpha beta : Circle), 
     ((a on_circle alpha) \/ (a in_circle alpha)) /\ ((b on_circle alpha) \/ (b in_circle alpha)) /\ 
     (a in_circle beta) /\ ~(b in_circle beta) /\ ~(b on_circle beta) -> 
-        Intersects_CC alpha beta.
+        IntersectsCC alpha beta.
 
 (*
 5. If a is on α, b is in α, a is in β, and b is on β, then α and β intersect.
 *)
 Axiom intersection_circle_circle_2: forall (a b : Point) (alpha beta : Circle), 
     (a on_circle alpha) /\ (b in_circle alpha) /\ (a in_circle beta) /\ (b on_circle beta) ->
-        Intersects_CC alpha beta.
+        IntersectsCC alpha beta.
 
 (* equality axioms *)
 

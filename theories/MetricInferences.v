@@ -12,10 +12,10 @@ Open Scope R.
 ab = 0 if and only if a = b.
 *)
 Axiom zero_segment_if : forall (a b : Point), 
-    segment2real (Segment_PP a b) = 0 -> a = b.
+    segment2real (SegmentPP a b) = 0 -> a = b.
 
 Axiom zero_segment_onlyif : forall (a b : Point), 
-    a = b -> segment2real (Segment_PP a b) = 0.
+    a = b -> segment2real (SegmentPP a b) = 0.
 
 (*
 2. 
@@ -28,14 +28,14 @@ Axiom segment_gte_zero : forall (s : Segment), 0 <= s.
 ab = ba.
 *)
 Axiom segment_symm : forall (a b : Point), 
-    (Segment_PP a b  == Segment_PP b a)%segment.
+    (SegmentPP a b  == SegmentPP b a)%segment.
 
 (*
 4. 
 a != b and b != c imply \abc = \cba.
 *)
 Axiom angle_symm : forall (a b c : Point),
-    (a <> b) /\ (b <> c) -> (Angle_PPP a b c == Angle_PPP c b a)%angle.
+    (a <> b) /\ (b <> c) -> (AnglePPP a b c == AnglePPP c b a)%angle.
 
 (*
 5. 
@@ -48,7 +48,7 @@ Axiom angle_range : forall (ang : Angle),
 6. 
 △aab = 0.
 *)
-Axiom degenerated_area : forall (a b : Point), area2real (Area_PPP a a b) = 0.
+Axiom degenerated_area : forall (a b : Point), area2real (AreaPPP a a b) = 0.
 
 (*
 7. 
@@ -61,10 +61,10 @@ Axiom area_gte_zero : forall (a : Area), 0 <= a.
 △abc = △cab and △abc = △acb.
 *)
 Axiom area_symm_1 : forall (a b c : Point),
-    (Area_PPP a b c == Area_PPP c a b)%area.
+    (AreaPPP a b c == AreaPPP c a b)%area.
 
 Axiom area_symm_2 : forall (a b c : Point),
-    (Area_PPP a b c == Area_PPP a c b)%area.
+    (AreaPPP a b c == AreaPPP a c b)%area.
 
 (*
 9. 
@@ -72,7 +72,7 @@ If ab = a′b′, bc = b′c′, ca = c′a′, \abc = \a′b′c′, \bca = \b�
 \cab = \c′a′b′, then △abc = △a′b′c′.
 *)
 Axiom area_congruence : forall (a b c a' b' c' : Point),
-    (Segment_PP a b == Segment_PP a' b')%segment /\ (Segment_PP b c == Segment_PP b' c')%segment /\ 
-    (Segment_PP c a == Segment_PP c' a')%segment /\ (Angle_PPP a b c == Angle_PPP a' b' c')%angle /\ 
-    (Angle_PPP b c a == Angle_PPP b' c' a')%angle /\ (Angle_PPP c a b == Angle_PPP c' a' b')%angle ->
-        (Area_PPP a b c == Area_PPP a' b' c')%area.
+    (SegmentPP a b == SegmentPP a' b')%segment /\ (SegmentPP b c == SegmentPP b' c')%segment /\ 
+    (SegmentPP c a == SegmentPP c' a')%segment /\ (AnglePPP a b c == AnglePPP a' b' c')%angle /\ 
+    (AnglePPP b c a == AnglePPP b' c' a')%angle /\ (AnglePPP c a b == AnglePPP c' a' b')%angle ->
+        (AreaPPP a b c == AreaPPP a' b' c')%area.

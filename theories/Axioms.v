@@ -122,3 +122,9 @@ Tactic Notation "euclid_superposition" constr(rule) "as" ident(name) ident(name2
                | |- _ => idtac
     end;
     euclid_apply rule as name name2.
+
+(* prove multiple goals sequentially *)
+Ltac euclid_split := match goal with
+                     | |- ?G1 /\ ?G2 => assert (G1)
+                     | _ => fail 999
+                     end.

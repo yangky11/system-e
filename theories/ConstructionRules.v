@@ -20,8 +20,8 @@ Conclusion: a is on L, [a is distinct from. . . ]
 *)
 Axiom point_on_line : forall L : Line, exists a : Point, a on_line L.
 
-Axiom distinct_point_on_line : forall (L : Line) (a : Point), 
-    exists b : Point, (b on_line L) /\ (b <> a).
+Axiom distinct_point_on_line : forall (L : Line) (b : Point), 
+    exists a : Point, (a on_line L) /\ (a <> b).
 
 (*
 3.
@@ -38,9 +38,9 @@ Axiom point_between_points_not_on_line : forall (L M : Line) (b c : Point),
         exists a : Point, (a on_line L) /\ (Between b a c) /\ ~(a on_line M).
 
 (* different from the original System E *)
-Axiom point_between_points_shorter_than : forall (L : Line) (b c d e : Point),
-    (b on_line L) /\ (c on_line L) /\ (b <> c) /\ (d <> e) ->
-        exists a : Point, (a on_line L) /\ (Between b a c) /\ (Segment_PP b a < Segment_PP d e).
+Axiom point_between_points_shorter_than : forall (L : Line) (b c : Point) (s : Segment),
+    (b on_line L) /\ (c on_line L) /\ (b <> c) /\ (s > 0) ->
+        exists a : Point, (a on_line L) /\ (Between b a c) /\ (SegmentPP b a < s).
 
 (*
 4. 
@@ -59,7 +59,7 @@ Axiom extend_point_not_on_line : forall (L M : Line) (b c : Point),
 
 Axiom extend_point_longer : forall (L : Line) (b c : Point) (s : Segment),
     (b on_line L) /\ (c on_line L) /\ b <> c -> 
-        exists a : Point, (a on_line L) /\ (Between b c a) /\ (Segment_PP c a > s)%segment.
+        exists a : Point, (a on_line L) /\ (Between b c a) /\ (SegmentPP c a > s)%segment.
 
 (*
 5. 
@@ -82,10 +82,10 @@ Conclusion: a is not on L, a is on the same side of L as b, [a is distinct
 from. . . ]
 *)
 Axiom point_opposite_side : forall (L : Line) (b : Point), 
-    ~(b on_line L) -> exists a : Point, ~(a on_line L) /\ ~(SameSide a b L).
+    ~(b on_line L) -> exists a : Point, OppositeSide a b L.
 
 Axiom distinct_point_opposite_side : forall (L : Line) (b c : Point), 
-    ~(b on_line L) -> exists a : Point, a <> c /\ ~(a on_line L) /\ ~(SameSide a b L).
+    ~(b on_line L) -> exists a : Point, a <> c /\ OppositeSide a b L.
 
 (*
 7. 
@@ -115,10 +115,10 @@ Prerequisites: none
 Conclusion: a is outside α, [a is distinct from. . . ]
 *)
 Axiom point_outside_circle : forall (alpha : Circle), 
-    exists a : Point, ~(a on_circle alpha) /\ ~(a in_circle alpha).
+    exists a : Point, a out_circle alpha.
 
 Axiom distinct_point_outside_circle : forall (alpha : Circle) (b : Point), 
-    exists a : Point, a <> b /\ ~(a on_circle alpha) /\ ~(a in_circle alpha).
+    exists a : Point, a <> b /\ a out_circle alpha.
 
 (* lines and circles *)
 
@@ -147,7 +147,7 @@ Prerequisite: L and M intersect
 Conclusion: a is on L, a is on M
 *)
 Axiom intersection_lines : forall (L M : Line), 
-    Intersects_LL L M -> exists a : Point, (a on_line L) /\ (a on_line M).
+    IntersectsLL L M -> exists a : Point, (a on_line L) /\ (a on_line M).
 
 (*
 2. 
@@ -156,7 +156,7 @@ Prerequisite: α and L intersect
 Conclusion: a is on α, a is on L
 *)
 Axiom intersection_circle_line : forall (alpha : Circle) (L : Line), 
-    Intersects_LC L alpha -> exists a : Point, (a on_circle alpha) /\ (a on_line L).
+    IntersectsLC L alpha -> exists a : Point, (a on_circle alpha) /\ (a on_line L).
 
 (*
 3. 
@@ -165,7 +165,7 @@ Prerequisite: α and L intersect
 Conclusion: a is on α, a is on L, b is on α, b is on L, a != b
 *)
 Axiom intersections_circle_line : forall (alpha : Circle) (L : Line), 
-    Intersects_LC L alpha -> exists (a b : Point), 
+    IntersectsLC L alpha -> exists (a b : Point), 
         (a on_circle alpha) /\ (a on_line L) /\ (b on_circle alpha) /\ (b on_line L) /\ a <> b.
 
 (*
@@ -176,7 +176,7 @@ on L
 Conclusion: a is on α, a is on L, a is between b and c
 *)
 Axiom intersection_circle_line_between_points : forall (alpha : Circle) (L : Line) (b c :Point),
-    (b in_circle alpha) /\ (b on_line L) /\ ~(c in_circle alpha) /\ ~(c on_circle alpha) /\ (c on_line L) ->
+    (b in_circle alpha) /\ (b on_line L) /\ (c out_circle alpha) /\ (c on_line L) ->
         exists a : Point, (a on_circle alpha) /\ (a on_line L) /\ (Between b a c).
 
 (*
@@ -197,7 +197,7 @@ Prerequisite: α and β intersect
 Conclusion: a is on α, a is on β
 *)
 Axiom intersection_circles : forall (alpha beta : Circle), 
-    Intersects_CC alpha beta -> 
+    IntersectsCC alpha beta -> 
         exists a : Point, (a on_circle alpha) /\ (a on_circle beta). 
 
 (*
@@ -207,7 +207,7 @@ Prerequisite: α and β intersect
 Conclusion: a is on α, a is on β, b is on α, b is on β, a != b
 *)
 Axiom intersections_circles : forall (alpha beta : Circle), 
-    Intersects_CC alpha beta -> exists (a b : Point), 
+    IntersectsCC alpha beta -> exists (a b : Point), 
         (a on_circle alpha) /\ (a on_circle beta) /\ (b on_circle alpha) /\ (b on_circle beta) /\ a <> b.
 
 (*
@@ -219,7 +219,7 @@ c is on L, d is on L, b is not on L
 Conclusion: a is on α, a is on β, a and b are on the same side of L
 *)
 Axiom intersection_same_side : forall (alpha beta : Circle) (b c d : Point) (L : Line),
-    (Intersects_CC alpha beta) /\ (c is_center_of alpha) /\ (d is_center_of beta) /\
+    (IntersectsCC alpha beta) /\ (c is_center_of alpha) /\ (d is_center_of beta) /\
     (c on_line L) /\ (d on_line L) /\ ~(b on_line L) -> 
         exists a : Point, (a on_circle alpha) /\ (a on_circle beta) /\ (SameSide a b L).
 
@@ -233,6 +233,6 @@ Conclusion: a is on α, a is on β, a and b are not on the same side of L, a
 is not on L.
 *)
 Axiom intersection_opposite_side : forall (alpha beta : Circle) (b c d : Point) (L : Line),
-    (Intersects_CC alpha beta) /\ (c is_center_of alpha) /\ (d is_center_of beta) /\
+    (IntersectsCC alpha beta) /\ (c is_center_of alpha) /\ (d is_center_of beta) /\
     (c on_line L) /\ (d on_line L) /\ ~(b on_line L) -> 
-        exists a : Point, (a on_circle alpha) /\ (a on_circle beta) /\ ~(SameSide a b L) /\ ~(a on_line L).
+        exists a : Point, (a on_circle alpha) /\ (a on_circle beta) /\ OppositeSide a b L.

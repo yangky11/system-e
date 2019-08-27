@@ -26,7 +26,7 @@ Proof.
 Qed.
 
 Theorem Proposition_1 : forall (a b : Point), a <> b ->
-    exists c : Point, Segment_PP c a == Segment_PP c b == Segment_PP a b.
+    exists c : Point, SegmentPP c a == SegmentPP c b == SegmentPP a b.
 Proof.
     intros.
     euclid_apply (ConstructionRules.circle_from_points a b) as alpha. (* construct a circle centered around a *)

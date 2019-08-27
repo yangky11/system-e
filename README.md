@@ -5,12 +5,13 @@ System E
 ## Dependencies
 
 * [OPAM](https://opam.ocaml.org/)
-* [dune >= 1.10](https://opam.ocaml.org/packages/dune/)
+* [Coq == 8.9.1](https://opam.ocaml.org/packages/coq/) install via OPAM: `opam install coq=8.9.1`
+* [dune >= 1.10.0](https://opam.ocaml.org/packages/dune/) install via OPAM: `opam install dune=1.10.0`
+* [z3 == 4.8.1](https://opam.ocaml.org/packages/z3/z3.4.8.1/) install via OPAM: `opam install z3=4.8.1`
 
 
 ## Installation
 
-1. `opam install z3=4.8.1`
 1. `git clone https://github.com/princeton-vl/system-e && cd system-e`
 1. `dune build && dune install`
 

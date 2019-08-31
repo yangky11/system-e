@@ -3,18 +3,18 @@
 ;(declare-sort Circle)
 
 ;(declare-fun Between (Point Point Point) Bool)
-;(declare-fun On_L (Point Line) Bool)
-;(declare-fun On_C (Point Circle) Bool)
+;(declare-fun OnL (Point Line) Bool)
+;(declare-fun OnC (Point Circle) Bool)
 ;(declare-fun Inside (Point Circle) Bool)
 ;(declare-fun Center (Point Circle) Bool)
 ;(declare-fun SameSide (Point Point Line) Bool)
-;(declare-fun Intersects_LL (Line Line) Bool)
-;(declare-fun Intersects_LC (Line Circle) Bool)
-;(declare-fun Intersects_CC (Circle Circle) Bool)
+;(declare-fun IntersectsLL (Line Line) Bool)
+;(declare-fun IntersectsLC (Line Circle) Bool)
+;(declare-fun IntersectsCC (Circle Circle) Bool)
 
-;(declare-fun Segment_PP (Point Point) Real)
-;(declare-fun Angle_PPP (Point Point Point) Real)
-;(declare-fun Area_PPP (Point Point Point) Real)
+;(declare-fun SegmentPP (Point Point) Real)
+;(declare-fun AnglePPP (Point Point Point) Real)
+;(declare-fun AreaPPP (Point Point Point) Real)
 ;(declare-const RightAngle Real)
 
  
@@ -32,14 +32,14 @@
             (=> 
                 (and 
                     (not (= a b)) 
-                    (On_L a L) 
-                    (On_L b L) 
-                    (On_L a M) 
-                    (On_L b M)
+                    (OnL a L) 
+                    (OnL b L) 
+                    (OnL a M) 
+                    (OnL b M)
                 )
                 (= L M)
             )
-            :pattern ((On_L a L) (On_L b L) (On_L a M) (On_L b M))
+            :pattern ((OnL a L) (OnL b L) (OnL a M) (OnL b M))
         )
     )
 )
@@ -72,7 +72,7 @@
     (forall ((a Point) (alpha Circle))
         (=>
             (Inside a alpha)
-            (not (On_C a alpha))
+            (not (OnC a alpha))
         )
     )
 )
@@ -98,10 +98,10 @@
         (=>
             (and 
                 (Between a b c) 
-                (On_L a L) 
-                (On_L b L)
+                (OnL a L) 
+                (OnL b L)
             )
-            (On_L c L)
+            (OnL c L)
         )
     )
 )
@@ -112,10 +112,10 @@
         (=>
             (and 
                 (Between a b c) 
-                (On_L a L) 
-                (On_L c L)
+                (OnL a L) 
+                (OnL c L)
             ) 
-            (On_L b L)
+            (OnL b L)
         )
     )
 )
@@ -154,9 +154,9 @@
                 (not (= a b)) 
                 (not (= b c))
                 (not (= c a))
-                (On_L a L) 
-                (On_L b L) 
-                (On_L c L)
+                (OnL a L) 
+                (OnL b L) 
+                (OnL c L)
             )
             (or 
                 (Between a b c) 
@@ -184,7 +184,7 @@
 (assert
     (forall ((a Point) (L Line))
         (=> 
-            (not (On_L a L)) 
+            (not (OnL a L)) 
             (SameSide a a L)
         )
     )
@@ -206,7 +206,7 @@
         (!
             (=> 
                 (SameSide a b L)
-                (not (On_L a L))
+                (not (OnL a L))
             )
             :pattern ((SameSide a b L))
         )
@@ -231,9 +231,9 @@
     (forall ((a Point) (b Point) (c Point) (L Line))
         (=> 
             (and 
-                (not (On_L a L))
-                (not (On_L b L))
-                (not (On_L c L))
+                (not (OnL a L))
+                (not (OnL b L))
+                (not (OnL c L))
             )
             (or 
                 (SameSide a b L) 
@@ -263,8 +263,8 @@
         (=> 
             (and 
                 (Between a b c) 
-                (On_L a L) 
-                (not (On_L b L))
+                (OnL a L) 
+                (not (OnL b L))
             )
             (SameSide b c L)
         )
@@ -277,7 +277,7 @@
         (=> 
             (and 
                 (Between a b c) 
-                (On_L b L)
+                (OnL b L)
             )
             (not (SameSide a c L))
         )
@@ -290,11 +290,11 @@
         (=> 
             (and 
                 (not (= L M)) 
-                (On_L b L)
-                (On_L b M) 
+                (OnL b L)
+                (OnL b M) 
                 (not (= a c))
-                (On_L a M)
-                (On_L c M)
+                (OnL a M)
+                (OnL c M)
                 (not (= a b)) 
                 (not (= c b)) 
                 (not (SameSide a c L)) 
@@ -310,18 +310,18 @@
         (!
             (=> 
                 (and 
-                    (On_L a L) 
-                    (On_L a M) 
-                    (On_L a N) 
-                    (On_L b L) 
-                    (On_L c M) 
-                    (On_L d N) 
+                    (OnL a L) 
+                    (OnL a M) 
+                    (OnL a N) 
+                    (OnL b L) 
+                    (OnL c M) 
+                    (OnL d N) 
                     (SameSide c d L) 
                     (SameSide b c N)
                 )
                 (not (SameSide b d M))
             )
-            :pattern ((On_L a L) (On_L a M) (On_L a N) (On_L b L) (On_L c M) (On_L d N) (SameSide c d L) (SameSide b c N))
+            :pattern ((OnL a L) (OnL a M) (OnL a N) (OnL b L) (OnL c M) (OnL d N) (SameSide c d L) (SameSide b c N))
         )
     )
 )
@@ -332,20 +332,20 @@
         (!
             (=> 
                 (and 
-                    (On_L a L) 
-                    (On_L a M) 
-                    (On_L a N) 
-                    (On_L b L) 
-                    (On_L c M) 
-                    (On_L d N)
+                    (OnL a L) 
+                    (OnL a M) 
+                    (OnL a N) 
+                    (OnL b L) 
+                    (OnL c M) 
+                    (OnL d N)
                     (SameSide c d L)
                     (not (SameSide b d M)) 
-                    (not (On_L d M))
+                    (not (OnL d M))
                     (not (= b a))
                 )
                 (SameSide b c N)
             )
-            :pattern ((On_L a L) (On_L a M) (On_L a N) (On_L b L) (On_L c M) (On_L d N) (SameSide c d L))
+            :pattern ((OnL a L) (OnL a M) (OnL a N) (OnL b L) (OnL c M) (OnL d N) (SameSide c d L))
         )
     )
 )
@@ -356,12 +356,12 @@
         (!
             (=> 
                 (and 
-                    (On_L a L) 
-                    (On_L a M) 
-                    (On_L a N) 
-                    (On_L b L) 
-                    (On_L c M) 
-                    (On_L d N) 
+                    (OnL a L) 
+                    (OnL a M) 
+                    (OnL a N) 
+                    (OnL b L) 
+                    (OnL c M) 
+                    (OnL d N) 
                     (SameSide c d L)
                     (SameSide b c N) 
                     (SameSide d e M) 
@@ -369,7 +369,7 @@
                 )
                 (SameSide c e L)
             )
-            :pattern ((On_L a L) (On_L a M) (On_L a N) (On_L b L) (On_L c M) (On_L d N) e)
+            :pattern ((OnL a L) (OnL a M) (OnL a N) (OnL b L) (OnL c M) (OnL d N) e)
         )
     )
 )
@@ -378,20 +378,17 @@
 ; circle_line_intersections
 (assert
     (forall ((a Point) (b Point) (c Point) (L Line) (alpha Circle))
-        (!
-            (=> 
-                (and 
-                    (On_L a L)
-                    (On_L b L) 
-                    (On_L c L) 
-                    (Inside a alpha) 
-                    (On_C b alpha) 
-                    (On_C c alpha) 
-                    (not (= b c))
-                )
-                (Between b a c)
+        (=> 
+            (and 
+                (OnL a L)
+                (OnL b L) 
+                (OnL c L) 
+                (Inside a alpha) 
+                (OnC b alpha) 
+                (OnC c alpha) 
+                (not (= b c))
             )
-            :pattern ((On_L a L) (On_L b L) (On_L c L) (Inside a alpha) (On_C b alpha) (On_C c alpha))
+            (Between b a c)
         )
     )
 )
@@ -403,11 +400,11 @@
             (and 
                 (or 
                     (Inside a alpha) 
-                    (On_C a alpha)
+                    (OnC a alpha)
                 )
                 (or 
                     (Inside b alpha) 
-                    (On_C b alpha)
+                    (OnC b alpha)
                 )
                 (Between a c b)
             )
@@ -423,14 +420,14 @@
             (and 
                 (or 
                     (Inside a alpha) 
-                    (On_C a alpha)
+                    (OnC a alpha)
                 ) 
                 (not (Inside c alpha)) 
                 (Between a c b)
             )
             (and 
                 (not (Inside b alpha)) 
-                (not (On_C b alpha))
+                (not (OnC b alpha))
             )
         )
     )
@@ -443,19 +440,19 @@
             (=> 
                 (and 
                     (not (= alpha beta)) 
-                    (On_C c alpha) 
-                    (On_C c beta) 
-                    (On_C d alpha) 
-                    (On_C d beta)
+                    (OnC c alpha) 
+                    (OnC c beta) 
+                    (OnC d alpha) 
+                    (OnC d beta)
                     (not (= c d))
                     (Center a alpha) 
                     (Center b beta)
-                    (On_L a L) 
-                    (On_L b L)    
+                    (OnL a L) 
+                    (OnL b L)    
                 )
                 (not (SameSide c d L))
             )
-            :pattern ((On_C c alpha) (On_C c beta) (On_C d alpha) (On_C d beta) (Center b beta) (On_L a L) (On_L b L))
+            :pattern ((OnC c alpha) (OnC c beta) (OnC d alpha) (OnC d beta) (Center b beta) (OnL a L) (OnL b L))
         )
     )
 )
@@ -466,15 +463,39 @@
         (!
             (=> 
                 (and 
-                    (not (On_L a L))
-                    (not (On_L b L))
+                    (not (OnL a L))
+                    (not (OnL b L))
                     (not (SameSide a b L))
-                    (On_L a M) 
-                    (On_L b M) 
+                    (OnL a M) 
+                    (OnL b M) 
                 )
-                (Intersects_LL L M)
+                (IntersectsLL L M)
             )
-            :pattern ((On_L a M) (On_L b M) L)
+            :pattern ((OnL a M) (OnL b M) L)
+        )
+    )
+)
+
+; intersection_lines_common_point
+(assert 
+    (forall ((a Point) (L Line) (M Line))
+        (=>
+            (and
+                (OnL a L)
+                (OnL a M)
+                (not (= L M))
+            )
+            (IntersectsLL L M)
+        )
+    )
+)
+
+; intersection_symm
+(assert 
+    (forall ((L Line) (M Line))
+        (=>
+            (IntersectsLL L M)
+            (IntersectsLL M L)
         )
     )
 )
@@ -485,18 +506,18 @@
         (=> 
             (and 
                 (or 
-                    (On_C a alpha)
+                    (OnC a alpha)
                     (Inside a alpha)   
                 ) 
                 (or 
-                    (On_C b alpha)
+                    (OnC b alpha)
                     (Inside b alpha) 
                 )
-                (not (On_L a L)) 
-                (not (On_L b L)) 
+                (not (OnL a L)) 
+                (not (OnL b L)) 
                 (not (SameSide a b L))
             )
-            (Intersects_LC L alpha)
+            (IntersectsLC L alpha)
         )
     )
 )
@@ -508,11 +529,11 @@
             (=> 
                 (and 
                     (Inside a alpha)
-                    (On_L a L)
+                    (OnL a L)
                 )
-                (Intersects_LC L alpha)
+                (IntersectsLC L alpha)
             )
-            :pattern ((Inside a alpha) (On_L a L))
+            :pattern ((Inside a alpha) (OnL a L))
         )
     )
 ) 
@@ -524,18 +545,18 @@
             (=> 
                 (and 
                     (or
-                        (On_C a alpha)
+                        (OnC a alpha)
                         (Inside a alpha)
                     )
                     (or 
-                        (On_C b alpha)
+                        (OnC b alpha)
                         (Inside b alpha)
                     )
                     (Inside a beta)
                     (not (Inside b beta))
-                    (not (On_C b beta))
+                    (not (OnC b beta))
                 )
-                (Intersects_CC alpha beta)
+                (IntersectsCC alpha beta)
             )
             :pattern ((Inside a beta) alpha b)
         )
@@ -548,14 +569,14 @@
         (!
             (=> 
                 (and 
-                    (On_C a alpha) 
+                    (OnC a alpha) 
                     (Inside b alpha) 
                     (Inside a beta) 
-                    (On_C b beta)
+                    (OnC b beta)
                 )
-                (Intersects_CC alpha beta)
+                (IntersectsCC alpha beta)
             )
-            :pattern ((On_C a alpha) (Inside b alpha) (Inside a beta) (On_C b beta))
+            :pattern ((OnC a alpha) (Inside b alpha) (Inside a beta) (OnC b beta))
         )
     )
 )
@@ -571,7 +592,7 @@
 (assert
     (forall ((a Point) (b Point))       
         (=> 
-            (= (Segment_PP a b) 0.0) 
+            (= (SegmentPP a b) 0.0) 
             (= a b)
         )
     )
@@ -582,7 +603,7 @@
     (forall ((a Point) (b Point)) 
         (=> 
             (= a b)
-            (= (Segment_PP a b) 0.0)
+            (= (SegmentPP a b) 0.0)
         )
     )
 )
@@ -590,14 +611,14 @@
 ; segment_gte_zero
 (assert
     (forall ((a Point) (b Point)) 
-        (>= (Segment_PP a b) 0.0)
+        (>= (SegmentPP a b) 0.0)
     )
 )
 
 ; segment_symm
 (assert
     (forall ((a Point) (b Point)) 
-        (= (Segment_PP a b) (Segment_PP b a))
+        (= (SegmentPP a b) (SegmentPP b a))
     )
 )
 
@@ -609,7 +630,7 @@
                 (not (= a b)) 
                 (not (= b c))
             )
-            (= (Angle_PPP a b c) (Angle_PPP c b a))
+            (= (AnglePPP a b c) (AnglePPP c b a))
         )
     )
 )
@@ -623,8 +644,8 @@
                 (not (= b c))
             )
             (and 
-                (>= (Angle_PPP a b c) 0.0) 
-                (<= (Angle_PPP a b c) (+ RightAngle RightAngle))
+                (>= (AnglePPP a b c) 0.0) 
+                (<= (AnglePPP a b c) (+ RightAngle RightAngle))
             )
         ) 
     )
@@ -633,28 +654,28 @@
 ; degenerated_area
 (assert
     (forall ((a Point) (b Point))
-        (= (Area_PPP a a b) 0.0)
+        (= (AreaPPP a a b) 0.0)
     )
 )
 
 ; area_gte_zero
 (assert
     (forall ((a Point) (b Point) (c Point))
-        (>= (Area_PPP a b c) 0.0)
+        (>= (AreaPPP a b c) 0.0)
     )
 )
 
 ; area_symm_1
 (assert
     (forall ((a Point) (b Point) (c Point))
-        (= (Area_PPP a b c) (Area_PPP c a b))
+        (= (AreaPPP a b c) (AreaPPP c a b))
     )
 )
 
 ; area_symm_2
 (assert
     (forall ((a Point) (b Point) (c Point))
-        (= (Area_PPP a b c) (Area_PPP a c b))
+        (= (AreaPPP a b c) (AreaPPP a c b))
     )
 )
 
@@ -664,16 +685,16 @@
         (!
             (=>
                 (and
-                    (= (Segment_PP a b) (Segment_PP d e))
-                    (= (Segment_PP b c) (Segment_PP e f))
-                    (= (Segment_PP c a) (Segment_PP f d))
-                    (= (Angle_PPP a b c) (Angle_PPP d e f))
-                    (= (Angle_PPP b c a) (Angle_PPP e f d))
-                    (= (Angle_PPP c a b) (Angle_PPP f d e))
+                    (= (SegmentPP a b) (SegmentPP d e))
+                    (= (SegmentPP b c) (SegmentPP e f))
+                    (= (SegmentPP c a) (SegmentPP f d))
+                    (= (AnglePPP a b c) (AnglePPP d e f))
+                    (= (AnglePPP b c a) (AnglePPP e f d))
+                    (= (AnglePPP c a b) (AnglePPP f d e))
                 )
-                (= (Area_PPP a b c) (Area_PPP d e f))
+                (= (AreaPPP a b c) (AreaPPP d e f))
             )
-            :pattern ((= (Segment_PP a b) (Segment_PP d e)) (= (Segment_PP b c) (Segment_PP e f)) (= (Segment_PP c a) (Segment_PP f d)) (= (Angle_PPP a b c) (Angle_PPP d e f)) (= (Angle_PPP b c a) (Angle_PPP e f d)) (= (Angle_PPP c a b) (Angle_PPP f d e)))
+            :pattern ((= (SegmentPP a b) (SegmentPP d e)) (= (SegmentPP b c) (SegmentPP e f)) (= (SegmentPP c a) (SegmentPP f d)) (= (AnglePPP a b c) (AnglePPP d e f)) (= (AnglePPP b c a) (AnglePPP e f d)) (= (AnglePPP c a b) (AnglePPP f d e)))
         )
     )
 )
@@ -691,7 +712,7 @@
         (!
             (=> 
                 (Between a b c) 
-                (= (+ (Segment_PP a b) (Segment_PP b c)) (Segment_PP a c))
+                (= (+ (SegmentPP a b) (SegmentPP b c)) (SegmentPP a c))
             )
             :pattern ((Between a b c))
         )
@@ -699,22 +720,22 @@
 )
 
 ; between_onlyif
-(assert
-    (forall ((a Point) (b Point) (c Point))
-        (!
-            (=> 
-                (and
-                    (not (= a b))
-                    (not (= b c))
-                    (not (= c a))
-                    (= (+ (Segment_PP a b) (Segment_PP b c)) (Segment_PP a c))
-                )
-                (Between a b c)       
-            )
-            :pattern ((= (+ (Segment_PP a b) (Segment_PP b c)) (Segment_PP a c)))
-        )
-    )
-)
+;(assert
+;    (forall ((a Point) (b Point) (c Point))
+;        (!
+;            (=> 
+;                (and
+;                    (not (= a b))
+;                    (not (= b c))
+;                    (not (= c a))
+;                    (= (+ (SegmentPP a b) (SegmentPP b c)) (SegmentPP a c))
+;                )
+;                (Between a b c)       
+;            )
+;            :pattern ((= (+ (SegmentPP a b) (SegmentPP b c)) (SegmentPP a c)))
+;        )
+;    )
+;)
 
 
 ; equal_circles
@@ -725,13 +746,13 @@
                 (and 
                     (Center a alpha) 
                     (Center a beta) 
-                    (On_C b alpha) 
-                    (On_C c beta)
-                    (= (Segment_PP a b) (Segment_PP a c))
+                    (OnC b alpha) 
+                    (OnC c beta)
+                    (= (SegmentPP a b) (SegmentPP a c))
                 )
                 (= alpha beta)
             )
-            :pattern ((Center a alpha) (Center a beta) (On_C b alpha) (On_C c beta) (= (Segment_PP a b) (Segment_PP a c)))
+            :pattern ((Center a alpha) (Center a beta) (OnC b alpha) (OnC c beta) (= (SegmentPP a b) (SegmentPP a c)))
         )
     )
 )
@@ -743,12 +764,12 @@
             (=> 
                 (and 
                     (Center a alpha) 
-                    (On_C b alpha) 
-                    (= (Segment_PP a c) (Segment_PP a b))
+                    (OnC b alpha) 
+                    (= (SegmentPP a c) (SegmentPP a b))
                 )
-                (On_C c alpha)
+                (OnC c alpha)
             )
-            :pattern ((Center a alpha) (= (Segment_PP a c) (Segment_PP a b)))
+            :pattern ((Center a alpha) (= (SegmentPP a c) (SegmentPP a b)))
         )
     )
 )
@@ -760,13 +781,13 @@
             (=> 
                 (and 
                     (Center a alpha) 
-                    (On_C b alpha) 
-                    (On_C c alpha)
+                    (OnC b alpha) 
+                    (OnC c alpha)
                     
                 )
-                (= (Segment_PP a c) (Segment_PP a b))
+                (= (SegmentPP a c) (SegmentPP a b))
             )
-            :pattern ((Center a alpha) (On_C b alpha) (On_C c alpha))
+            :pattern ((Center a alpha) (OnC b alpha) (OnC c alpha))
         )
     )
 )
@@ -778,12 +799,12 @@
             (=> 
                 (and 
                     (Center a alpha) 
-                    (On_C b alpha)
-                    (< (Segment_PP a c) (Segment_PP a b)) 
+                    (OnC b alpha)
+                    (< (SegmentPP a c) (SegmentPP a b)) 
                 )
                 (Inside c alpha)
             )
-            :pattern ((Center a alpha) (On_C b alpha) (< (Segment_PP a c) (Segment_PP a b)))
+            :pattern ((Center a alpha) (OnC b alpha) (< (SegmentPP a c) (SegmentPP a b)))
         )
     )
 )
@@ -795,12 +816,12 @@
             (=> 
                 (and 
                     (Center a alpha) 
-                    (On_C b alpha)
+                    (OnC b alpha)
                     (Inside c alpha)
                 )
-                (< (Segment_PP a c) (Segment_PP a b)) 
+                (< (SegmentPP a c) (SegmentPP a b)) 
             )
-            :pattern ((Center a alpha) (On_C b alpha) (Inside c alpha))
+            :pattern ((Center a alpha) (OnC b alpha) (Inside c alpha))
         )
     )
 )
@@ -813,14 +834,14 @@
                 (and 
                     (not (= a b)) 
                     (not (= a c)) 
-                    (On_L a L) 
-                    (On_L b L)
-                    (On_L c L) 
+                    (OnL a L) 
+                    (OnL b L)
+                    (OnL c L) 
                     (not (Between b a c))
                 )
-                (= (Angle_PPP b a c) 0.0)
+                (= (AnglePPP b a c) 0.0)
             )
-            :pattern ((On_L a L) (On_L b L) (On_L c L))
+            :pattern ((OnL a L) (OnL b L) (OnL c L))
         )
     )
 )
@@ -833,16 +854,16 @@
                 (and 
                     (not (= a b)) 
                     (not (= a c)) 
-                    (On_L a L) 
-                    (On_L b L)
-                    (= (Angle_PPP b a c) 0.0)
+                    (OnL a L) 
+                    (OnL b L)
+                    (= (AnglePPP b a c) 0.0)
                 )
                 (and
-                    (On_L c L) 
+                    (OnL c L) 
                     (not (Between b a c))
                 )
             )
-            :pattern ((= (Angle_PPP b a c) 0.0) L)
+            :pattern ((= (AnglePPP b a c) 0.0) L)
         )
     )
 )
@@ -853,16 +874,17 @@
         (!
             (=>
                 (and
-                    (On_L a L)
-                    (On_L b L)
+                    (OnL a L)
+                    (OnL b L)
                     (not (= a b))
                     (not (= d a))
-                    (= (Angle_PPP b a c) (Angle_PPP b a d))
-                    (= (Segment_PP a c) (Segment_PP a d))
+                    (SameSide c d L)
+                    (= (AnglePPP b a c) (AnglePPP b a d))
+                    (= (SegmentPP a c) (SegmentPP a d))
                 )
                 (= c d)
             )
-            :pattern ((On_L a L) (On_L b L) (= (Angle_PPP b a c) (Angle_PPP b a d)) (= (Segment_PP a c) (Segment_PP a d)))
+            :pattern ((OnL a L) (OnL b L) (SameSide c d L) (= (AnglePPP b a c) (AnglePPP b a d)) (= (SegmentPP a c) (SegmentPP a d)))
         )
     )
 )
@@ -873,23 +895,23 @@
         (!
             (=> 
                 (and 
-                    (On_L a L) 
-                    (On_L a M) 
-                    (On_L b L)
-                    (On_L c M)
+                    (OnL a L) 
+                    (OnL a M) 
+                    (OnL b L)
+                    (OnL c M)
                     (not (= a b)) 
                     (not (= a c)) 
-                    (not (On_L d L)) 
-                    (not (On_L d M)) 
+                    (not (OnL d L)) 
+                    (not (OnL d M)) 
                     (not (= L M))
-                    (= (Angle_PPP b a c) (+ (Angle_PPP b a d) (Angle_PPP d a c)))
+                    (= (AnglePPP b a c) (+ (AnglePPP b a d) (AnglePPP d a c)))
                 )  
                 (and 
                     (SameSide b d M) 
                     (SameSide c d L)
                 )
             )
-            :pattern ((On_L a L) (On_L a M) (On_L b L) (On_L c M) (= (Angle_PPP b a c) (+ (Angle_PPP b a d) (Angle_PPP d a c))))
+            :pattern ((OnL a L) (OnL a M) (OnL b L) (OnL c M) (= (AnglePPP b a c) (+ (AnglePPP b a d) (AnglePPP d a c))))
         )
     )
 )
@@ -897,25 +919,22 @@
 ; sum_angles_onlyif
 (assert
     (forall ((a Point) (b Point) (c Point) (d Point) (L Line) (M Line))
-        (!
-            (=> 
-                (and 
-                    (On_L a L) 
-                    (On_L a M) 
-                    (On_L b L)
-                    (On_L c M)
-                    (not (= a b)) 
-                    (not (= a c)) 
-                    (not (On_L d L)) 
-                    (not (On_L d M)) 
-                    (not (= L M))
-                    (SameSide b d M) 
-                    (SameSide c d L)
-                    
-                )  
-                (= (Angle_PPP b a c) (+ (Angle_PPP b a d) (Angle_PPP d a c)))
-            )
-            :pattern ((On_L a L) (On_L a M) (On_L b L) (On_L c M) (SameSide b d M) (SameSide c d L))
+        (=> 
+            (and 
+                (OnL a L) 
+                (OnL a M) 
+                (OnL b L)
+                (OnL c M)
+                (not (= a b)) 
+                (not (= a c)) 
+                (not (OnL d L)) 
+                (not (OnL d M)) 
+                (not (= L M))
+                (SameSide b d M) 
+                (SameSide c d L)
+                
+            )  
+            (= (AnglePPP b a c) (+ (AnglePPP b a d) (AnglePPP d a c)))
         )
     )
 )
@@ -926,15 +945,15 @@
         (!
             (=> 
                 (and 
-                    (On_L a L) 
-                    (On_L b L) 
+                    (OnL a L) 
+                    (OnL b L) 
                     (Between a c b) 
-                    (not (On_L d L))
-                    (= (Angle_PPP a c d) (Angle_PPP d c b))
+                    (not (OnL d L))
+                    (= (AnglePPP a c d) (AnglePPP d c b))
                 )   
-                (= (Angle_PPP a c d) RightAngle)
+                (= (AnglePPP a c d) RightAngle)
             )
-            :pattern ((On_L a L) (On_L b L) (Between a c b) (= (Angle_PPP a c d) (Angle_PPP d c b)))
+            :pattern ((OnL a L) (OnL b L) (Between a c b) (= (AnglePPP a c d) (AnglePPP d c b)))
         )
     )
 )
@@ -945,15 +964,28 @@
         (!
             (=> 
                 (and 
-                    (On_L a L) 
-                    (On_L b L) 
+                    (OnL a L) 
+                    (OnL b L) 
                     (Between a c b) 
-                    (not (On_L d L))
-                    (= (Angle_PPP a c d) RightAngle)
+                    (not (OnL d L))
+                    (= (AnglePPP a c d) RightAngle)
                 )   
-                (= (Angle_PPP a c d) (Angle_PPP d c b))
+                (= (AnglePPP a c d) (AnglePPP d c b))
             )
-            :pattern ((On_L a L) (On_L b L) (Between a c b) (= (Angle_PPP a c d) RightAngle))
+            :pattern ((OnL a L) (OnL b L) (Between a c b) (= (AnglePPP a c d) RightAngle))
+        )
+    )
+)
+
+; flat_angle
+(assert 
+    (forall ((a Point) (b Point) (c Point))
+        (=>
+            (Between a b c)
+            (=  
+                (AnglePPP a b c) 
+                (+ RightAngle RightAngle)
+            )
         )
     )
 )
@@ -964,12 +996,12 @@
         (!
             (=>
                 (and
-                    (On_L a L)
-                    (On_L b L)
-                    (On_L e L)
-                    (On_L a M)
-                    (On_L c M)
-                    (On_L f M)
+                    (OnL a L)
+                    (OnL b L)
+                    (OnL e L)
+                    (OnL a M)
+                    (OnL c M)
+                    (OnL f M)
                     (not (= b a))
                     (not (= e a))
                     (not (= c a))
@@ -977,9 +1009,9 @@
                     (not (Between b a e))
                     (not (Between c a f))
                 )
-                (= (Angle_PPP b a c) (Angle_PPP e a f))
+                (= (AnglePPP b a c) (AnglePPP e a f))
             )
-            :pattern ((On_L a L) (On_L b L) (On_L e L) (On_L a M) (On_L c M) (On_L f M))
+            :pattern ((OnL a L) (OnL b L) (OnL e L) (OnL a M) (OnL c M) (OnL f M))
         )
     )
 )
@@ -990,28 +1022,28 @@
         (!
             (=>
                 (and
-                    (On_L a L)
-                    (On_L b L)
-                    (On_L b M)
-                    (On_L c M)
-                    (On_L c N)
-                    (On_L d N)
+                    (OnL a L)
+                    (OnL b L)
+                    (OnL b M)
+                    (OnL c M)
+                    (OnL c N)
+                    (OnL d N)
                     (not (= b c))
                     (SameSide a d M) 
                     (< 
-                        (+ (Angle_PPP a b c) (Angle_PPP b c d))
+                        (+ (AnglePPP a b c) (AnglePPP b c d))
                         (+ RightAngle RightAngle)
                     )
                 )
                 (exists ((e Point))
                     (and
-                        (On_L e L)
-                        (On_L e N)
+                        (OnL e L)
+                        (OnL e N)
                         (SameSide e a M)
                     )
                 )
             )
-            :pattern ((< (+ (Angle_PPP a b c) (Angle_PPP b c d)) (+ RightAngle RightAngle)) L M N)
+            :pattern ((< (+ (AnglePPP a b c) (AnglePPP b c d)) (+ RightAngle RightAngle)) L M N)
         )
     )
 )
@@ -1022,14 +1054,14 @@
         (!
             (=> 
                 (and 
-                    (On_L a L) 
-                    (On_L b L) 
+                    (OnL a L) 
+                    (OnL b L) 
                     (not (= a b))
-                    (= (Area_PPP a b c) 0.0)
+                    (= (AreaPPP a b c) 0.0)
                 )    
-                (On_L c L)
+                (OnL c L)
             )
-            :pattern ((= (Area_PPP a b c) 0.0) L)
+            :pattern ((= (AreaPPP a b c) 0.0) L)
         )
     )
 )
@@ -1039,12 +1071,12 @@
     (forall ((a Point) (b Point) (c Point) (L Line))
         (=> 
             (and 
-                (On_L a L) 
-                (On_L b L) 
+                (OnL a L) 
+                (OnL b L) 
                 (not (= a b))
-                (On_L c L)
+                (OnL c L)
             )    
-            (= (Area_PPP a b c) 0.0)
+            (= (AreaPPP a b c) 0.0)
         )
     )
 )
@@ -1055,21 +1087,21 @@
         (!
             (=> 
                 (and 
-                    (On_L a L) 
-                    (On_L b L) 
-                    (On_L c L) 
+                    (OnL a L) 
+                    (OnL b L) 
+                    (OnL c L) 
                     (not (= a b)) 
                     (not (= a c)) 
                     (not (= b c))
-                    (not (On_L d L)) 
+                    (not (OnL d L)) 
                     (Between a c b)
                 )
                 (= 
-                    (+ (Area_PPP a c d) (Area_PPP d c b)) 
-                    (Area_PPP a d b)
+                    (+ (AreaPPP a c d) (AreaPPP d c b)) 
+                    (AreaPPP a d b)
                 )
             )
-            :pattern ((On_L a L) (On_L b L) (On_L c L)(Between a c b) d)
+            :pattern ((OnL a L) (OnL b L) (OnL c L)(Between a c b) d)
         )
     )
 )
@@ -1080,21 +1112,21 @@
         (!
             (=> 
                 (and 
-                    (On_L a L) 
-                    (On_L b L) 
-                    (On_L c L) 
+                    (OnL a L) 
+                    (OnL b L) 
+                    (OnL c L) 
                     (not (= a b)) 
                     (not (= a c)) 
                     (not (= b c))
-                    (not (On_L d L)) 
+                    (not (OnL d L)) 
                     (= 
-                        (+ (Area_PPP a c d) (Area_PPP d c b)) 
-                        (Area_PPP a d b)
+                        (+ (AreaPPP a c d) (AreaPPP d c b)) 
+                        (AreaPPP a d b)
                     )
                 )
                 (Between a c b)
             )
-            :pattern ((On_L a L) (On_L b L) (On_L c L) d)
+            :pattern ((OnL a L) (OnL b L) (OnL c L) d)
         )
     )
 )

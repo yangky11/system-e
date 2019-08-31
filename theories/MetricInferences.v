@@ -54,7 +54,7 @@ Axiom degenerated_area : forall (a b : Point), area2real (AreaPPP a a b) = 0.
 7. 
 △abc ≥ 0.
 *)
-Axiom area_gte_zero : forall (a : Area), 0 <= a.
+Axiom area_gte_zero : forall (ar : Area), 0 <= ar.
 
 (*
 8. 

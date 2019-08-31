@@ -48,9 +48,9 @@ let euclid_smt : unit Proofview.tactic =
 
   let between_sym = mk_string ctx "Between" in
   let between_func = mk_func_decl ctx between_sym [point_sort; point_sort; point_sort] bool_sort in
-  let on_l_sym = mk_string ctx "On_L" in
+  let on_l_sym = mk_string ctx "OnL" in
   let on_l_func = mk_func_decl ctx on_l_sym [point_sort; line_sort] bool_sort in
-  let on_c_sym = mk_string ctx "On_C" in
+  let on_c_sym = mk_string ctx "OnC" in
   let on_c_func = mk_func_decl ctx on_c_sym [point_sort; circle_sort] bool_sort in
   let inside_sym = mk_string ctx "Inside" in
   let inside_func = mk_func_decl ctx inside_sym [point_sort; circle_sort] bool_sort in
@@ -58,18 +58,18 @@ let euclid_smt : unit Proofview.tactic =
   let center_func = mk_func_decl ctx center_sym [point_sort; circle_sort] bool_sort in
   let sameside_sym = mk_string ctx "SameSide" in
   let sameside_func = mk_func_decl ctx sameside_sym [point_sort; point_sort; line_sort] bool_sort in
-  let intersects_ll_sym = mk_string ctx "Intersects_LL" in
+  let intersects_ll_sym = mk_string ctx "IntersectsLL" in
   let intersects_ll_func = mk_func_decl ctx intersects_ll_sym [line_sort; line_sort] bool_sort in
-  let intersects_lc_sym = mk_string ctx "Intersects_LC" in
+  let intersects_lc_sym = mk_string ctx "IntersectsLC" in
   let intersects_lc_func = mk_func_decl ctx intersects_lc_sym [line_sort; circle_sort] bool_sort in
-  let intersects_cc_sym = mk_string ctx "Intersects_CC" in
+  let intersects_cc_sym = mk_string ctx "IntersectsCC" in
   let intersects_cc_func = mk_func_decl ctx intersects_cc_sym [circle_sort; circle_sort] bool_sort in
 
-  let segment_pp_sym = mk_string ctx "Segment_PP" in
+  let segment_pp_sym = mk_string ctx "SegmentPP" in
   let segment_pp_func = mk_func_decl ctx segment_pp_sym [point_sort; point_sort] real_sort in
-  let angle_ppp_sym = mk_string ctx "Angle_PPP" in
+  let angle_ppp_sym = mk_string ctx "AnglePPP" in
   let angle_ppp_func = mk_func_decl ctx angle_ppp_sym [point_sort; point_sort; point_sort] real_sort in
-  let area_ppp_sym = mk_string ctx "Area_PPP" in
+  let area_ppp_sym = mk_string ctx "AreaPPP" in
   let area_ppp_func = mk_func_decl ctx area_ppp_sym [point_sort; point_sort; point_sort] real_sort in
   let rightangle_sym = mk_string ctx "RightAngle" in
   let rightangle_const = FuncDecl.mk_const_decl ctx rightangle_sym real_sort in
@@ -144,10 +144,10 @@ let euclid_smt : unit Proofview.tactic =
     | LetIn _ -> print_endline "LetIn"; failwith "LetIn"
 
     | App (func, args) -> 
-        (*
+        
         print_endline "App"; 
         print_endline (constr2str env sigma func);
-        Array.iter (fun t -> print_endline (constr2str env sigma t)) args;*)
+        Array.iter (fun t -> print_endline (constr2str env sigma t)) args;
         let func_str = constr2str env sigma func in
         (match func_str with
         | "not" -> 
@@ -156,6 +156,8 @@ let euclid_smt : unit Proofview.tactic =
             mk_eq ctx (recur (Array.get args 1)) (recur (Array.get args 2))
         | "Rgt" ->
             mk_gt ctx (recur (Array.get args 0)) (recur (Array.get args 1))
+        | "Rge" ->
+            mk_ge ctx (recur (Array.get args 0)) (recur (Array.get args 1))
         | "Rlt" ->
             mk_lt ctx (recur (Array.get args 0)) (recur (Array.get args 1))
         | "Rle" ->
@@ -168,6 +170,8 @@ let euclid_smt : unit Proofview.tactic =
             mk_or ctx [recur (Array.get args 0); recur (Array.get args 1)]
         | "Rplus" ->
             mk_add ctx [recur (Array.get args 0); recur (Array.get args 1)]
+        | "IZR" ->
+            Integer.mk_int2real ctx (recur (Array.get args 0))
         | "segment2real"
         | "segment2real_implicit"
         | "angle2real"
@@ -175,29 +179,65 @@ let euclid_smt : unit Proofview.tactic =
         | "area2real"
         | "area2real_implicit" ->
             recur (Array.get args 0)
-        | "Segment_PP" -> 
+        | "SegmentPP" -> 
             mk_app ctx segment_pp_func [recur (Array.get args 0); recur (Array.get args 1)]
-        | "Angle_PPP" -> 
+        | "AnglePPP" -> 
             mk_app ctx angle_ppp_func [recur (Array.get args 0); recur (Array.get args 1); recur (Array.get args 2)]
-        | "Area_PPP" -> 
+        | "AreaPPP" -> 
             mk_app ctx area_ppp_func [recur (Array.get args 0); recur (Array.get args 1); recur (Array.get args 2)]
-        | "On_L" ->
+        | "OnL" ->
             mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 1)]
         | "SameSide" ->
             mk_app ctx sameside_func [recur (Array.get args 0); recur (Array.get args 1); recur (Array.get args 2)]
+        | "OppositeSide" ->
+            let a_on_L = mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 2)] in
+            let b_on_L = mk_app ctx on_l_func [recur (Array.get args 1); recur (Array.get args 2)] in
+            let a_sameside_b = mk_app ctx sameside_func [recur (Array.get args 0); recur (Array.get args 1); recur (Array.get args 2)] in
+            mk_and ctx [mk_not ctx a_on_L; mk_not ctx b_on_L; mk_not ctx a_sameside_b]
         | "Between" ->
             mk_app ctx between_func [recur (Array.get args 0); recur (Array.get args 1); recur (Array.get args 2)]
-        | "On_C" ->
+        | "OnC" ->
             mk_app ctx on_c_func [recur (Array.get args 0); recur (Array.get args 1)]
         | "Inside" ->
             mk_app ctx inside_func [recur (Array.get args 0); recur (Array.get args 1)]
+        | "Outside" ->
+            let a_inside_alpha = mk_app ctx inside_func [recur (Array.get args 0); recur (Array.get args 1)] in
+            let a_on_alpha = mk_app ctx on_c_func [recur (Array.get args 0); recur (Array.get args 1)] in
+            mk_and ctx [mk_not ctx a_inside_alpha; mk_not ctx a_on_alpha]
+        | "DistinctPointsOnL" ->
+            let a_neq_b = mk_not ctx (mk_eq ctx (recur (Array.get args 0)) (recur (Array.get args 1))) in
+            let a_on_L = mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 2)] in
+            let b_on_L = mk_app ctx on_l_func [recur (Array.get args 1); recur (Array.get args 2)] in
+            mk_and ctx [a_neq_b; a_on_L; b_on_L]
+        | "Triangle" ->
+            let a_neq_b = mk_not ctx (mk_eq ctx (recur (Array.get args 0)) (recur (Array.get args 1))) in
+            let a_on_AB = mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 3)] in
+            let b_on_AB = mk_app ctx on_l_func [recur (Array.get args 1); recur (Array.get args 3)] in
+            let b_neq_c = mk_not ctx (mk_eq ctx (recur (Array.get args 1)) (recur (Array.get args 2))) in
+            let b_on_BC = mk_app ctx on_l_func [recur (Array.get args 1); recur (Array.get args 4)] in
+            let c_on_BC = mk_app ctx on_l_func [recur (Array.get args 2); recur (Array.get args 4)] in
+            let c_neq_a = mk_not ctx (mk_eq ctx (recur (Array.get args 2)) (recur (Array.get args 0))) in
+            let c_on_CA = mk_app ctx on_l_func [recur (Array.get args 2); recur (Array.get args 5)] in
+            let a_on_CA = mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 5)] in
+            let ab_neq_bc = mk_not ctx (mk_eq ctx (recur (Array.get args 3)) (recur (Array.get args 4))) in
+            let bc_neq_ca = mk_not ctx (mk_eq ctx (recur (Array.get args 4)) (recur (Array.get args 5))) in
+            let ca_neq_ab = mk_not ctx (mk_eq ctx (recur (Array.get args 5)) (recur (Array.get args 3))) in
+            mk_and ctx [a_neq_b; a_on_AB; b_on_AB; b_neq_c; b_on_BC; c_on_BC; c_neq_a; c_on_CA; a_on_CA; ab_neq_bc; bc_neq_ca; ca_neq_ab]
+        | "RectilinearAngle" ->
+            let a_neq_b = mk_not ctx (mk_eq ctx (recur (Array.get args 0)) (recur (Array.get args 1))) in
+            let a_on_ab = mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 3)] in
+            let b_on_ab = mk_app ctx on_l_func [recur (Array.get args 1); recur (Array.get args 3)] in
+            let b_neq_c = mk_not ctx (mk_eq ctx (recur (Array.get args 1)) (recur (Array.get args 2))) in
+            let b_on_bc = mk_app ctx on_l_func [recur (Array.get args 1); recur (Array.get args 4)] in
+            let c_on_bc = mk_app ctx on_l_func [recur (Array.get args 2); recur (Array.get args 4)] in
+            mk_and ctx [a_neq_b; a_on_ab; b_on_ab; b_neq_c; b_on_bc; c_on_bc]
         | "Center" ->
             mk_app ctx center_func [recur (Array.get args 0); recur (Array.get args 1)]
-        | "Intersects_LL" ->
+        | "IntersectsLL" ->
             mk_app ctx intersects_ll_func [recur (Array.get args 0); recur (Array.get args 1)]
-        | "Intersects_LC" ->
+        | "IntersectsLC" ->
             mk_app ctx intersects_lc_func [recur (Array.get args 0); recur (Array.get args 1)]
-        | "Intersects_CC" ->
+        | "IntersectsCC" ->
             mk_app ctx intersects_cc_func [recur (Array.get args 0); recur (Array.get args 1)]
         | _ -> failwith func_str)
 
@@ -214,6 +254,7 @@ let euclid_smt : unit Proofview.tactic =
         let s = Names.MutInd.to_string induct in
         (match s, idx with
         | "SystemE.Sorts.Angle", 2 -> mk_app ctx rightangle_const []
+        | "Coq.Numbers.BinNums.Z", 1 -> Integer.mk_numeral_i ctx 0 
         | _ -> failwith "Construct")
 
     | Case _ -> print_endline "Case"; failwith "Case"

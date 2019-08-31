@@ -23,7 +23,7 @@
 (assert 
     (forall ((L Line))
         (exists ((a Point))
-            (On_L a L)
+            (OnL a L)
         )
     )
 )
@@ -32,7 +32,7 @@
     (forall ((L Line) (a Point))
         (exists ((b Point))
             (and 
-                (On_L b L)
+                (OnL b L)
                 (not (= b a))
             )
         )
@@ -43,13 +43,13 @@
     (forall ((L Line) (b Point) (c Point))
         (=>
             (and
-                (On_L b L)
-                (On_L c L)
+                (OnL b L)
+                (OnL c L)
                 (not (= b c))
             )
             (exists ((a Point))
                 (and
-                    (On_L a L)
+                    (OnL a L)
                     (Between b a c)
                 )
             )
@@ -61,16 +61,16 @@
     (forall ((L Line) (M Line) (b Point) (c Point))
         (=>
             (and
-                (On_L b L)
-                (On_L c L)
+                (OnL b L)
+                (OnL c L)
                 (not (= b c))
                 (not (= L M))
             )
             (exists ((a Point))
                 (and
-                    (On_L a L)
+                    (OnL a L)
                     (Between b a c)
-                    (not (On_L a M))
+                    (not (OnL a M))
                 )
             )
         )
@@ -81,13 +81,13 @@
     (forall ((L Line) (b Point) (c Point))
         (=> 
             (and
-                (On_L b L)
-                (On_L c L)
+                (OnL b L)
+                (OnL c L)
                 (not (= b c))
             )
             (exists ((a Point))
                 (and
-                    (On_L a L)
+                    (OnL a L)
                     (Between b c a)
                 )
             )
@@ -99,16 +99,16 @@
     (forall ((L Line) (M Line) (b Point) (c Point))
         (=> 
             (and
-                (On_L b L)
-                (On_L c L)
+                (OnL b L)
+                (OnL c L)
                 (not (= b c))
                 (not (= L M))
             )
             (exists ((a Point))
                 (and
-                    (On_L a L)
+                    (OnL a L)
                     (Between b c a)
-                    (not (On_L a M))
+                    (not (OnL a M))
                 )
             )
         )
@@ -118,7 +118,7 @@
 (assert 
     (forall ((L Line) (b Point))
         (=>
-            (not (On_L b L))
+            (not (OnL b L))
             (exists ((a Point))
                 (SameSide a b L)
             )
@@ -129,7 +129,7 @@
 (assert 
     (forall ((L Line) (b Point) (c Point))
         (=>
-            (not (On_L b L))
+            (not (OnL b L))
             (exists ((a Point))
                 (and
                     (not (= a c))
@@ -143,10 +143,10 @@
 (assert 
     (forall ((L Line) (b Point))
         (=> 
-            (not (On_L b L))
+            (not (OnL b L))
             (exists ((a Point))
                 (and
-                    (not (On_L a L))
+                    (not (OnL a L))
                     (not (SameSide a b L))
                 )
             )
@@ -157,11 +157,11 @@
 (assert 
     (forall ((L Line) (b Point) (c Point))
         (=> 
-            (not (On_L b L))
+            (not (OnL b L))
             (exists ((a Point))
                 (and
                     (not (= a c))
-                    (not (On_L a L))
+                    (not (OnL a L))
                     (not (SameSide a b L))
                 )
             )
@@ -172,7 +172,7 @@
 (assert 
     (forall ((alpha Circle))
         (exists ((a Point))
-            (On_C a alpha)
+            (OnC a alpha)
         )
     )
 )
@@ -182,7 +182,7 @@
         (exists ((a Point))
             (and
                 (not (= a b))
-                (On_C a alpha)
+                (OnC a alpha)
             )
         )
     )
@@ -211,7 +211,7 @@
     (forall ((alpha Circle))
         (exists ((a Point))
             (and
-                (not (On_C a alpha))
+                (not (OnC a alpha))
                 (not (Inside a alpha))
             )
         )
@@ -223,7 +223,7 @@
         (exists ((a Point))
             (and
                 (not (= a b))
-                (not (On_C a alpha))
+                (not (OnC a alpha))
                 (not (Inside a alpha))
             )
         )
@@ -236,8 +236,8 @@
             (not (= a b))
             (exists ((L Line))
                 (and
-                    (On_L a L)
-                    (On_L b L)
+                    (OnL a L)
+                    (OnL b L)
                 )
             )
         )
@@ -249,11 +249,11 @@
 (assert 
     (forall ((L Line) (M Line))
         (=>
-            (Intersects_LL L M)
+            (IntersectsLL L M)
             (exists ((a Point))
                 (and
-                    (On_L a L)
-                    (On_L a M)
+                    (OnL a L)
+                    (OnL a M)
                 )
             )
         )
@@ -263,11 +263,11 @@
 (assert 
     (forall ((alpha Circle) (L Line))
         (=>
-            (Intersects_LC L alpha)
+            (IntersectsLC L alpha)
             (exists ((a Point))
                 (and
-                    (On_C a alpha)
-                    (On_L a L)
+                    (OnC a alpha)
+                    (OnL a L)
                 )
             )
         )
@@ -277,13 +277,13 @@
 (assert 
     (forall ((alpha Circle) (L Line))
         (=>
-            (Intersects_LC L alpha)
+            (IntersectsLC L alpha)
             (exists ((a Point) (b Point))
                 (and
-                    (On_C a alpha)
-                    (On_L a L)
-                    (On_C b alpha)
-                    (On_L b L)
+                    (OnC a alpha)
+                    (OnL a L)
+                    (OnC b alpha)
+                    (OnL b L)
                     (not (= a b))
                 )
             )
@@ -296,15 +296,15 @@
         (=>
             (and
                 (Inside b alpha)
-                (On_L b L)
+                (OnL b L)
                 (not (Inside c alpha))
-                (not (On_C c alpha))
-                (On_L c L)
+                (not (OnC c alpha))
+                (OnL c L)
             )
             (exists ((a Point))
                 (and
-                    (On_C a alpha)
-                    (On_L a L)
+                    (OnC a alpha)
+                    (OnL a L)
                     (Between b a c)
                 )
             )
@@ -317,14 +317,14 @@
         (=>
             (and
                 (Inside b alpha)
-                (On_L b L)
+                (OnL b L)
                 (not (= c b))
-                (On_L c L)
+                (OnL c L)
             )
             (exists ((a Point))
                 (and
-                    (On_C a alpha)
-                    (On_L a L)
+                    (OnC a alpha)
+                    (OnL a L)
                     (Between a b c)
                 )
             )
@@ -337,14 +337,14 @@
         (=>
             (and
                 (Inside b alpha)
-                (On_L b L)
+                (OnL b L)
                 (not (= c b))
-                (On_L c L)
+                (OnL c L)
             )
             (exists ((a Point))
                 (and
-                    (On_C a alpha)
-                    (On_L a L)
+                    (OnC a alpha)
+                    (OnL a L)
                     (Between a b c)
                 )
             )
@@ -355,11 +355,11 @@
 (assert 
     (forall ((alpha Circle) (beta Circle))
         (=>
-            (Intersects_CC alpha beta)
+            (IntersectsCC alpha beta)
             (exists ((a Point))
                 (and
-                    (On_C a alpha)
-                    (On_C a beta)
+                    (OnC a alpha)
+                    (OnC a beta)
                 )
             )
         )
@@ -369,13 +369,13 @@
 (assert 
     (forall ((alpha Circle) (beta Circle))
         (=>
-            (Intersects_CC alpha beta)
+            (IntersectsCC alpha beta)
             (exists ((a Point) (b Point))
                 (and
-                    (On_C a alpha)
-                    (On_C a beta)
-                    (On_C b alpha)
-                    (On_C b beta)
+                    (OnC a alpha)
+                    (OnC a beta)
+                    (OnC b alpha)
+                    (OnC b beta)
                     (not (= a b))
                 )
             )
@@ -387,17 +387,17 @@
     (forall ((alpha Circle) (beta Circle) (b Point) (c Point) (d Point) (L Line))
         (=>
             (and
-                (Intersects_CC alpha beta)
+                (IntersectsCC alpha beta)
                 (Center c alpha)
                 (Center c beta)
-                (On_L c L)
-                (On_L d L)
-                (not (On_L b L))
+                (OnL c L)
+                (OnL d L)
+                (not (OnL b L))
             )
             (exists ((a Point))
                 (and
-                    (On_C a alpha)
-                    (On_C a beta)
+                    (OnC a alpha)
+                    (OnC a beta)
                     (SameSide a b L)
                 )
             )
@@ -409,19 +409,19 @@
     (forall ((alpha Circle) (beta Circle) (b Point) (c Point) (d Point) (L Line))
         (=>
             (and
-                (Intersects_CC alpha beta)
+                (IntersectsCC alpha beta)
                 (Center c alpha)
                 (Center c beta)
-                (On_L c L)
-                (On_L d L)
-                (not (On_L b L))
+                (OnL c L)
+                (OnL d L)
+                (not (OnL b L))
             )
             (exists ((a Point))
                 (and
-                    (On_C a alpha)
-                    (On_C a beta)
+                    (OnC a alpha)
+                    (OnC a beta)
                     (not (SameSide a b L))
-                    (not (On_L a L))
+                    (not (OnL a L))
                 )
             )
         )

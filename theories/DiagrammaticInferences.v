@@ -226,8 +226,7 @@ If a and b are each inside α or on α, and c is between a and b, then c is
 inside α.
 *)
 Axiom circle_points_between : forall (a b c : Point) (alpha : Circle),
-    ((a in_circle alpha) \/ (a on_circle alpha)) /\ 
-    ((b in_circle alpha) \/ (b on_circle alpha)) /\ (Between a c b) -> 
+    ~(a out_circle alpha) /\ ~(b out_circle alpha) /\ (Between a c b) -> 
         c in_circle alpha.
 
 (*
@@ -236,8 +235,8 @@ If a is inside α or on α, c is not inside α, and c is between a and b, then b
 is neither inside α nor on α.
 *)
 Axiom circle_points_extend : forall (a b c : Point) (alpha : Circle),
-    ((a in_circle alpha) \/ (a on_circle alpha)) /\ ~(c in_circle alpha) /\ (Between a c b) -> 
-        ~(b in_circle alpha) /\ ~(b on_circle alpha).
+    ~(a out_circle alpha) /\ ~(c in_circle alpha) /\ (Between a c b) -> 
+        (b out_circle alpha).
 
 (*
 4. Let α and β be distinct circles that intersect in distinct points c and d.
@@ -258,7 +257,7 @@ If a and b are on different sides of L, and M is the line through a and b,
 then L and M intersect.
 *)
 Axiom intersection_lines: forall (a b : Point) (L M : Line),
-    ~(a on_line L) /\ ~(b on_line L) /\ ~(SameSide a b L) /\ (a on_line M) /\ (b on_line M) ->
+    (OppositeSide a b L) /\ (a on_line M) /\ (b on_line M) ->
         IntersectsLL L M.
 
 Axiom intersection_lines_common_point : forall (a : Point) (L M : Line),
@@ -273,8 +272,7 @@ If a is on or inside α, b is on or inside α, and a and b are on different side
 of L, then L and α intersect.
 *)
 Axiom intersection_circle_line_1: forall (a b : Point) (alpha : Circle) (L: Line),
-    ((a on_circle alpha) \/ (a in_circle alpha)) /\ ((b on_circle alpha) \/ (b in_circle alpha)) /\ 
-    ~(a on_line L) /\ ~(b on_line L) /\ ~(SameSide a b L) -> 
+    ~(a out_circle alpha) /\ ~(b out_circle alpha) /\ (OppositeSide a b L) -> 
         IntersectsLC L alpha.
 
 (*
@@ -288,8 +286,7 @@ Axiom intersection_circle_line_2: forall (a : Point) (alpha : Circle) (L: Line),
 then α and β intersect.
 *)
 Axiom intersection_circle_circle_1: forall (a b : Point) (alpha beta : Circle), 
-    ((a on_circle alpha) \/ (a in_circle alpha)) /\ ((b on_circle alpha) \/ (b in_circle alpha)) /\ 
-    (a in_circle beta) /\ ~(b in_circle beta) /\ ~(b on_circle beta) -> 
+    ~(a out_circle alpha) /\ ~(b out_circle alpha) /\ (a in_circle beta) /\ (b out_circle beta) -> 
         IntersectsCC alpha beta.
 
 (*

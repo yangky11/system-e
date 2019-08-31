@@ -58,11 +58,21 @@ Parameter IntersectsLL : Line -> Line -> Prop.
 Parameter IntersectsLC : Line -> Circle -> Prop.
 Parameter IntersectsCC : Circle -> Circle -> Prop.
 
-Definition OppositeSide (a : Point) (b : Point) (L : Line) := 
+Definition OppositeSide (a b : Point) (L : Line) := 
     ~(OnL a L) /\ ~(OnL b L) /\ ~(SameSide a b L).
 
 Definition Outside (a : Point) (alpha : Circle) := 
     ~(OnC a alpha) /\ ~(Inside a alpha).
+
+Definition DistinctPointsOnL (a b : Point) (L : Line) :=
+    a <> b /\ OnL a L /\ OnL b L.
+
+Definition Triangle (a b c : Point) (AB BC CA : Line) :=
+    DistinctPointsOnL a b AB /\ DistinctPointsOnL b c BC /\ DistinctPointsOnL c a CA /\
+    AB <> BC /\ BC <> CA /\ CA <> AB.
+
+Definition RectilinearAngle (a b c : Point) (AB BC : Line) :=
+    DistinctPointsOnL a b AB /\ DistinctPointsOnL b c BC.
 
 Notation "a 'on_line' L" := (OnL a L)  (at level 75, no associativity) : assert_scope.
 Notation "a 'on_circle' alpha" := (OnC a alpha)  (at level 75, no associativity) : assert_scope.

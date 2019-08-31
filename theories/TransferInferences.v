@@ -9,12 +9,13 @@ If b is between a and c, then ab + bc = ac.
 Axiom between_if : forall (a b c : Point),
     (Between a b c) -> 
         segment2real (SegmentPP a b) + segment2real (SegmentPP b c) = segment2real (SegmentPP a c).
-
+(*
 Axiom between_onlyif : forall (a b c : Point), 
     a <> b /\ b <> c /\ c <> a /\
     segment2real (SegmentPP a b) + segment2real (SegmentPP b c) = segment2real (SegmentPP a c) ->
         (Between a b c).
-        
+*)
+
 (*
 2. 
 If a is the center of α and β, b is on α, c is on β, and ab = ac, then α = β.
@@ -65,7 +66,7 @@ Axiom degenerated_angle_onlyif : forall (a b c : Point) (L : Line),
 
 (* addtional axiom not in sysetem e *)
 Axiom angle_superposition : forall (a b c d : Point) (L : Line), 
-    a on_line L /\ b on_line L /\ a <> b /\ d <> a /\
+    a on_line L /\ b on_line L /\ a <> b /\ d <> a /\ SameSide c d L /\
     (AnglePPP b a c == AnglePPP b a d)%angle /\ 
     (SegmentPP a c == SegmentPP a d)%segment ->
     c = d.
@@ -103,6 +104,7 @@ Axiom perpendicular_onlyif : forall (a b c d : Point) (L : Line),
 Axiom flat_angle : forall (a b c : Point), 
     (Between a b c) ->
         (angle2real (AnglePPP a b c) = RightAngle + RightAngle).
+
 
 (*
 4. 

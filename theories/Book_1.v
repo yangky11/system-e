@@ -247,3 +247,19 @@ Proof.
             euclid_apply (ConstructionRules.intersection_lines AF DE) as g.  (*Some construction rules really need to be automated !!! *)
             euclid_trivial.
 all:fail. Admitted.
+
+
+Theorem proposition_10 : forall (a b : Point) (AB : Line), DistinctPointsOnL a b AB ->
+    exists d : Point, (Between a d b) /\ (SegmentPP a d == SegmentPP d b)%segment.
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_1 a b) as c.
+    euclid_apply (ConstructionRules.line_from_points c a) as AC.
+    euclid_apply (ConstructionRules.line_from_points c b) as BC.
+    euclid_apply (proposition_9' c a b AC BC) as d'.
+    euclid_apply (ConstructionRules.line_from_points c d') as CD.
+    euclid_apply (ConstructionRules.intersection_lines CD AB) as d.
+    exists d.
+    euclid_apply (proposition_4 c a d c b d AC AB CD BC AB CD).
+    euclid_trivial.
+all:fail. Admitted.

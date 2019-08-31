@@ -263,3 +263,131 @@ Proof.
     euclid_apply (proposition_4 c a d c b d AC AB CD BC AB CD).
     euclid_trivial.
 all:fail. Admitted.
+
+
+Theorem proposition_11 : forall (a b c : Point) (AB : Line), 
+    DistinctPointsOnL a b AB /\ Between a c b ->
+    exists f : Point, ~(f on_line AB) /\ (AnglePPP a c f == RightAngle)%angle.
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.point_between_points_shorter_than AB c a (SegmentPP c b)) as d.
+    euclid_apply (proposition_3 c b c d) as e.
+    euclid_apply (proposition_1 d e AB) as f.
+    euclid_apply (ConstructionRules.line_from_points d f) as DF.
+    euclid_apply (ConstructionRules.line_from_points f e) as FE.
+    euclid_apply (ConstructionRules.line_from_points f c) as FC.
+    exists f.
+    euclid_apply (proposition_8 c d f c e f AB DF FC AB FE FC).
+    euclid_apply (TransferInferences.perpendicular_if d e c f AB).
+    euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_11' : forall (a b c g : Point) (AB : Line), 
+    DistinctPointsOnL a b AB /\ Between a c b /\ ~(g on_line AB) ->
+    exists f : Point, (SameSide f g AB) /\ (AnglePPP a c f == RightAngle)%angle.
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.point_between_points_shorter_than AB c a (SegmentPP c b)) as d.
+    euclid_apply (proposition_3 c b c d) as e.
+    euclid_apply (ConstructionRules.point_opposite_side AB g) as h.
+    euclid_apply (proposition_1' d e h AB) as f.
+    euclid_apply (ConstructionRules.line_from_points d f) as DF.
+    euclid_apply (ConstructionRules.line_from_points f e) as FE.
+    euclid_apply (ConstructionRules.line_from_points f c) as FC.
+    exists f.
+    euclid_apply (proposition_8 c d f c e f AB DF FC AB FE FC).
+    euclid_apply (TransferInferences.perpendicular_if d e c f AB).
+    euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_12 : forall (a b c : Point) (AB : Line), 
+    DistinctPointsOnL a b AB /\ ~ (c on_line AB) ->
+    exists h : Point, h on_line AB /\ ((AnglePPP a h c == RightAngle)%angle \/ (AnglePPP b h c == RightAngle)%angle).
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.point_opposite_side AB c) as d.
+    euclid_apply (ConstructionRules.circle_from_points c d) as EFG.
+    euclid_apply (ConstructionRules.intersections_circle_line EFG AB) as e g.
+    euclid_apply (proposition_10 e g) as h.
+    euclid_apply (ConstructionRules.line_from_points c g) as CG.
+    euclid_apply (ConstructionRules.line_from_points c h) as CH.
+    euclid_apply (ConstructionRules.line_from_points c e) as CE.
+    exists h.
+    euclid_apply (proposition_8 h c g h c e CH CG AB CH CE AB).
+    euclid_case (a = h).
+    + euclid_apply (TransferInferences.perpendicular_if e g h c AB).
+       euclid_trivial.
+    + euclid_case (SameSide a g CH).
+       - euclid_apply (TransferInferences.perpendicular_if g e h c AB). 
+          euclid_trivial.
+       - euclid_apply (TransferInferences.perpendicular_if e g h c AB).
+          euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_13 : forall (a b c d : Point) (AB CD : Line), 
+    AB <> CD /\ DistinctPointsOnL a b AB /\ DistinctPointsOnL c d CD /\ Between d b c  ->
+    (angle2real (AnglePPP c b a)) + (angle2real (AnglePPP a b d)) = (angle2real RightAngle) + (angle2real RightAngle).
+Proof.
+    euclid_intros.
+    euclid_case (AnglePPP c b a == AnglePPP a b d)%angle.
+    + euclid_trivial.
+    + euclid_apply (proposition_11' d c b a CD) as e. 
+       euclid_apply (ConstructionRules.line_from_points b e) as BE. 
+       euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_14 : forall (a b c d : Point) (AB BC BD : Line), 
+    DistinctPointsOnL a b AB /\ DistinctPointsOnL b c BC /\ DistinctPointsOnL b d BD /\ (OppositeSide c d AB) /\ ~(a on_line BC) /\
+    (angle2real (AnglePPP a b c)) + (angle2real (AnglePPP a b d)) = (angle2real RightAngle) + (angle2real RightAngle) ->
+    BC = BD.
+Proof.
+    euclid_intros.
+    euclid_contradict.
+    euclid_apply (ConstructionRules.extend_point BC c b) as e.
+    euclid_apply (proposition_13 a b e c AB BC). 
+    euclid_trivial (AnglePPP a b e == AnglePPP a b d)%angle.
+    euclid_case  (SameSide a e BD).
+    + euclid_apply (TransferInferences.sum_angles_onlyif b a d e AB BD).
+        euclid_trivial.
+    + euclid_apply (TransferInferences.sum_angles_onlyif b a e d AB BC).
+        euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_14' : forall (a b c d : Point) (AB BC BD : Line), 
+    DistinctPointsOnL a b AB /\ DistinctPointsOnL b c BC /\ DistinctPointsOnL b d BD /\ (OppositeSide c d AB) /\
+    (angle2real (AnglePPP a b c)) + (angle2real (AnglePPP a b d)) = (angle2real RightAngle) + (angle2real RightAngle) ->
+    BC = BD.
+Proof.
+    euclid_intros.
+    euclid_case (a on_line BC).
+    + euclid_case (Between c b a). 
+        - euclid_contradict.
+           euclid_apply (TransferInferences.flat_angle a b c).
+           euclid_trivial.
+        - euclid_contradict.
+           euclid_apply (ConstructionRules.extend_point BC c b) as e.
+           euclid_trivial (angle2real (AnglePPP a b c) = 0)%angle.
+           euclid_trivial (angle2real (AnglePPP a b d) = (angle2real RightAngle) + (angle2real RightAngle)).
+           euclid_apply (proposition_13 d b c e BC BD).
+           euclid_trivial.
+    + euclid_apply (proposition_14 a b c d AB BC BD).
+        assumption. 
+all: fail. Admitted.
+
+
+Theorem proposition_15 : forall (a b c d e : Point) (AB CD : Line), 
+    DistinctPointsOnL a b AB /\ DistinctPointsOnL c d CD /\ e on_line AB /\ e on_line CD /\ 
+    CD <> AB /\ (Between d e c) /\ (Between a e b) ->
+    (AnglePPP a e c == AnglePPP d e b)%angle /\ (AnglePPP c e b == AnglePPP a e d)%angle.
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_13 a e c d AB CD). 
+    euclid_apply (proposition_13 d e a b CD AB).
+    euclid_apply (proposition_13 c e a b CD AB).
+    euclid_trivial.
+all: fail. Admitted.

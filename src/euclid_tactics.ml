@@ -33,7 +33,7 @@ let constr2str env sigma term =
 let euclid_smt : unit Proofview.tactic = 
   print_endline "initializing euclid_smt..";
 
-  let cfg = [("model", "true"); ("proof", "false"); ("model_validate", "true"); ("well_sorted_check", "true")] in
+  let cfg = [("auto_config", "true"); ("model", "true"); ("proof", "false"); ("model_validate", "true"); ("well_sorted_check", "true")] in
   let ctx = mk_context cfg in
 
   let bool_sort = mk_sort ctx in
@@ -270,7 +270,6 @@ let euclid_smt : unit Proofview.tactic =
   let solver = Solver.mk_simple_solver ctx in
   let solver_param = Params.mk_params ctx in
 
-  
   Params.add_bool solver_param (mk_string ctx "mbqi") true;
   Params.add_bool solver_param (mk_string ctx "ematching") true;
   Params.add_int solver_param (mk_string ctx "mbqi.max_cexs") 3;

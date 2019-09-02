@@ -17,7 +17,7 @@
 ;(declare-fun AreaPPP (Point Point Point) Real)
 ;(declare-const RightAngle Real)
 
- 
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;
@@ -863,7 +863,7 @@
                     (not (Between b a c))
                 )
             )
-            :pattern ((= (AnglePPP b a c) 0.0) L)
+            :pattern ((= (AnglePPP b a c) 0.0) (OnL a L) (OnL b L))
         )
     )
 )
@@ -977,7 +977,7 @@
     )
 )
 
-; flat_angle
+; flat_angle_onlyif
 (assert 
     (forall ((a Point) (b Point) (c Point))
         (=>
@@ -986,6 +986,23 @@
                 (AnglePPP a b c) 
                 (+ RightAngle RightAngle)
             )
+        )
+    )
+)
+
+; flat_angle_if
+(assert 
+    (forall ((a Point) (b Point) (c Point))
+        (=>
+            (and
+                (not (= a b))
+                (not (= a c))
+                (=  
+                    (AnglePPP a b c) 
+                    (+ RightAngle RightAngle)
+                )
+            )
+            (Between a b c)
         )
     )
 )

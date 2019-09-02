@@ -101,7 +101,11 @@ Axiom perpendicular_onlyif : forall (a b c d : Point) (L : Line),
     (a on_line L) /\ (b on_line L) /\ (Between a c b) /\ ~(d on_line L) /\ (AnglePPP a c d == RightAngle)%angle ->
         (AnglePPP a c d == AnglePPP d c b)%angle.
 
-Axiom flat_angle : forall (a b c : Point), 
+Axiom flat_angle_if : forall (a b c : Point), 
+    a <> b /\ b <> c /\ (angle2real (AnglePPP a b c) = RightAngle + RightAngle) ->
+        (Between a b c).
+
+Axiom flat_angle_onlyif : forall (a b c : Point), 
     (Between a b c) ->
         (angle2real (AnglePPP a b c) = RightAngle + RightAngle).
 

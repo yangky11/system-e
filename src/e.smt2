@@ -825,7 +825,7 @@
 ; point_in_circle_onlyif
 (assert
     (forall ((a Point) (b Point) (c Point) (alpha Circle))
-        (!
+        
             (=> 
                 (and 
                     (Center a alpha) 
@@ -834,8 +834,7 @@
                 )
                 (< (SegmentPP a c) (SegmentPP a b)) 
             )
-            :pattern ((Center a alpha) (OnC b alpha) (Inside c alpha))
-        )
+
     )
 )
 

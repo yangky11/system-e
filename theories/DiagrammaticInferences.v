@@ -264,6 +264,10 @@ Axiom intersection_lines_common_point : forall (a : Point) (L M : Line),
     a on_line L /\ a on_line M /\ L <> M ->
         IntersectsLL L M.
 
+Axiom parallel_line_unique : forall (a : Point) (L M N : Line),
+    ~(a on_line L) /\ a on_line M /\ a on_line N /\ ~(IntersectsLL L M) /\ ~(IntersectsLL L N) ->
+        M = N.
+
 Axiom intersection_symm : forall (L M : Line), IntersectsLL L M -> IntersectsLL M L.
 
 (*

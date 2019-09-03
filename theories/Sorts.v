@@ -74,6 +74,10 @@ Definition Triangle (a b c : Point) (AB BC CA : Line) :=
 Definition RectilinearAngle (a b c : Point) (AB BC : Line) :=
     DistinctPointsOnL a b AB /\ DistinctPointsOnL b c BC.
 
+Definition Parallelogram (a b c d : Point) (AB CD AC BD : Line) :=
+    DistinctPointsOnL a b AB /\ DistinctPointsOnL c d CD /\ DistinctPointsOnL a c AC /\ DistinctPointsOnL b d BD /\ 
+    (SameSide a c BD) /\ ~(IntersectsLL AB CD) /\ ~(IntersectsLL AC BD).
+
 Notation "a 'on_line' L" := (OnL a L)  (at level 75, no associativity) : assert_scope.
 Notation "a 'on_circle' alpha" := (OnC a alpha)  (at level 75, no associativity) : assert_scope.
 Notation "a 'in_circle' alpha" := (Inside a alpha)  (at level 75, no associativity) : assert_scope.

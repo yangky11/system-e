@@ -460,18 +460,15 @@
 ; intersection_lines
 (assert
     (forall ((a Point) (b Point) (L Line) (M Line))
-        (!
-            (=> 
-                (and 
-                    (not (OnL a L))
-                    (not (OnL b L))
-                    (not (SameSide a b L))
-                    (OnL a M) 
-                    (OnL b M) 
-                )
-                (IntersectsLL L M)
+        (=> 
+            (and 
+                (not (OnL a L))
+                (not (OnL b L))
+                (not (SameSide a b L))
+                (OnL a M) 
+                (OnL b M) 
             )
-            :pattern ((OnL a M) (OnL b M) L)
+            (IntersectsLL L M)
         )
     )
 )
@@ -486,6 +483,22 @@
                 (not (= L M))
             )
             (IntersectsLL L M)
+        )
+    )
+)
+
+; parallel_line_unique
+(assert 
+    (forall ((a Point) (L Line) (M Line) (N Line))
+        (=>
+            (and
+                (not (OnL a L))
+                (OnL a M)
+                (OnL a N)
+                (not (IntersectsLL L M))
+                (not (IntersectsLL L N))
+            )
+            (= M N)
         )
     )
 )
@@ -849,21 +862,18 @@
 ; degenerated_angle_onlyif
 (assert
     (forall ((a Point) (b Point) (c Point) (L Line))
-        (!
-            (=> 
-                (and 
-                    (not (= a b)) 
-                    (not (= a c)) 
-                    (OnL a L) 
-                    (OnL b L)
-                    (= (AnglePPP b a c) 0.0)
-                )
-                (and
-                    (OnL c L) 
-                    (not (Between b a c))
-                )
+        (=> 
+            (and 
+                (not (= a b)) 
+                (not (= a c)) 
+                (OnL a L) 
+                (OnL b L)
+                (= (AnglePPP b a c) 0.0)
             )
-            :pattern ((= (AnglePPP b a c) 0.0) (OnL a L) (OnL b L))
+            (and
+                (OnL c L) 
+                (not (Between b a c))
+            )
         )
     )
 )
@@ -1010,25 +1020,22 @@
 ; equal_angles
 (assert 
     (forall ((a Point) (b Point) (e Point) (c Point) (f Point) (L Line) (M Line))
-        (!
-            (=>
-                (and
-                    (OnL a L)
-                    (OnL b L)
-                    (OnL e L)
-                    (OnL a M)
-                    (OnL c M)
-                    (OnL f M)
-                    (not (= b a))
-                    (not (= e a))
-                    (not (= c a))
-                    (not (= f a))
-                    (not (Between b a e))
-                    (not (Between c a f))
-                )
-                (= (AnglePPP b a c) (AnglePPP e a f))
+        (=>
+            (and
+                (OnL a L)
+                (OnL b L)
+                (OnL e L)
+                (OnL a M)
+                (OnL c M)
+                (OnL f M)
+                (not (= b a))
+                (not (= e a))
+                (not (= c a))
+                (not (= f a))
+                (not (Between b a e))
+                (not (Between c a f))
             )
-            :pattern ((OnL a L) (OnL b L) (OnL e L) (OnL a M) (OnL c M) (OnL f M))
+            (= (AnglePPP b a c) (AnglePPP e a f))
         )
     )
 )
@@ -1118,7 +1125,7 @@
                     (AreaPPP a d b)
                 )
             )
-            :pattern ((OnL a L) (OnL b L) (OnL c L)(Between a c b) d)
+            :pattern ((OnL a L) (OnL b L) (OnL c L) (Between a c b) d)
         )
     )
 )

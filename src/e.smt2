@@ -27,19 +27,16 @@
 
 ; two_points_determine_line
 (assert 
-    (forall ((a Point) (b Point) (L Line) (M Line))
-        (!   
-            (=> 
-                (and 
-                    (not (= a b)) 
-                    (OnL a L) 
-                    (OnL b L) 
-                    (OnL a M) 
-                    (OnL b M)
-                )
-                (= L M)
+    (forall ((a Point) (b Point) (L Line) (M Line))     
+        (=> 
+            (and 
+                (not (= a b)) 
+                (OnL a L) 
+                (OnL b L) 
+                (OnL a M) 
+                (OnL b M)
             )
-            :pattern ((OnL a L) (OnL b L) (OnL a M) (OnL b M))
+            (= L M)
         )
     )
 )

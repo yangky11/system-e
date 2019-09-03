@@ -1133,24 +1133,21 @@
 ; sum_areas_onlyif
 (assert
     (forall ((a Point) (b Point) (c Point) (d Point) (L Line)) 
-        (!
-            (=> 
-                (and 
-                    (OnL a L) 
-                    (OnL b L) 
-                    (OnL c L) 
-                    (not (= a b)) 
-                    (not (= a c)) 
-                    (not (= b c))
-                    (not (OnL d L)) 
-                    (= 
-                        (+ (AreaPPP a c d) (AreaPPP d c b)) 
-                        (AreaPPP a d b)
-                    )
+        (=> 
+            (and 
+                (OnL a L) 
+                (OnL b L) 
+                (OnL c L) 
+                (not (= a b)) 
+                (not (= a c)) 
+                (not (= b c))
+                (not (OnL d L)) 
+                (= 
+                    (+ (AreaPPP a c d) (AreaPPP d c b)) 
+                    (AreaPPP a d b)
                 )
-                (Between a c b)
             )
-            :pattern ((OnL a L) (OnL b L) (OnL c L) d)
+            (Between a c b)
         )
     )
 )

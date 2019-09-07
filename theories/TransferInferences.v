@@ -122,6 +122,7 @@ Axiom equal_angles : forall (a b b' c c' : Point) (L M : Line),
     (b <> a) /\ (b' <> a) /\ (c <> a) /\ (c' <> a) /\ 
     ~(Between b a b') /\ ~(Between c a c') ->
         (AnglePPP b a c == AnglePPP b' a c')%angle.
+(* changed!!! *)
 
 (*
 5. 
@@ -165,3 +166,10 @@ Axiom sum_areas_onlyif : forall (a b c d : Point) (L : Line),
     (a <> b) /\ (a <> c) /\ (b <> c) /\ ~(d on_line L) /\ 
     (area2real (AreaPPP a c d) + area2real (AreaPPP d c b) = area2real (AreaPPP a d b)) ->
         Between a c b.
+
+
+(* parallelogram rules *)
+
+Axiom parallelogram_area : forall (a b c d : Point) (AB CD AC BD : Line), 
+    Parallelogram a b c d AB CD AC BD -> 
+        (area2real (AreaPPP a c d) + area2real (AreaPPP a d b) = area2real (AreaPPP b a c) + area2real (AreaPPP b c d)).

@@ -311,3 +311,10 @@ x = x
 2. 
 If x = y and ϕ(x), then ϕ(y)
 *)
+
+
+(* parallelogram rules *)
+
+Axiom parallelogram_same_side : forall (a b c d : Point) (AB CD AC BD : Line), 
+    Parallelogram a b c d AB CD AC BD -> 
+        SameSide b d AC /\ SameSide c d AB /\ SameSide a b CD.

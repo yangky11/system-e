@@ -284,13 +284,17 @@ let euclid_smt : unit Proofview.tactic =
   Proofview.Goal.enter begin fun gl ->
   print_endline "calling euclid_smt..";
   
-  let solver = Solver.mk_simple_solver ctx in
+  let solver = Solver.mk_solver ctx None in
   let solver_param = Params.mk_params ctx in
 
-  Params.add_bool solver_param (mk_string ctx "mbqi") true;
-  Params.add_bool solver_param (mk_string ctx "ematching") true;
-  Params.add_int solver_param (mk_string ctx "mbqi.max_cexs") 3;
-  Params.add_int solver_param (mk_string ctx "mbqi.force_template") 0;
+  Params.add_bool solver_param (mk_string ctx "smt.mbqi") true;
+  Params.add_bool solver_param (mk_string ctx "smt.ematching") true;
+  Params.add_bool solver_param (mk_string ctx "smt.mbqi.trace") true;
+  Params.add_int solver_param (mk_string ctx "smt.mbqi.max_cexs") 1;
+  Params.add_int solver_param (mk_string ctx "smt.mbqi.force_template") 0;
+  Params.add_bool solver_param (mk_string ctx "smt.qi.profile") true;
+  Params.add_float solver_param (mk_string ctx "smt.qi.eager_threshold") 10.0;
+  Params.add_int solver_param (mk_string ctx "smt.qi.max_multi_patterns") 4;
   (*
   Params.add_symbol solver_param (mk_string ctx "logic") (mk_string ctx "AUFLIRA");
   *)

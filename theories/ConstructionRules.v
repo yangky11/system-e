@@ -74,6 +74,9 @@ Axiom point_same_side : forall (L : Line) (b : Point),
 Axiom distinct_point_same_side : forall (L : Line) (b c : Point), 
     ~(b on_line L) -> exists a : Point, a <> c /\ SameSide a b L.
 
+Axiom point_on_line_same_side : forall (L M : Line) (b : Point), 
+    ~(b on_line L) /\ (IntersectsLL L M) -> exists a : Point, a on_line M /\ SameSide a b L.
+
 (*
 6. 
 Let a be a point on the side of L opposite b [distinct from. . . ]

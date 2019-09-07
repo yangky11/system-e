@@ -856,3 +856,4 @@ Proof.
     euclid_apply (proposition_13 b g e h AB EF).
     euclid_trivial.
 all: fail. Admitted.
+

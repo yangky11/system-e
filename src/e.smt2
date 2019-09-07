@@ -27,16 +27,19 @@
 
 ; two_points_determine_line
 (assert 
-    (forall ((a Point) (b Point) (L Line) (M Line))     
-        (=> 
-            (and 
-                (not (= a b)) 
-                (OnL a L) 
-                (OnL b L) 
-                (OnL a M) 
-                (OnL b M)
+    (forall ((a Point) (b Point) (L Line) (M Line))
+        (!   
+            (=> 
+                (and 
+                    (not (= a b)) 
+                    (OnL a L) 
+                    (OnL b L) 
+                    (OnL a M) 
+                    (OnL b M)
+                )
+                (= L M)
             )
-            (= L M)
+            :pattern ((OnL a L) (OnL b L) (OnL a M) (OnL b M))
         )
     )
 )
@@ -591,6 +594,36 @@
     )
 )
 
+; parallelogram_same_side
+(assert 
+    (forall ((a Point) (b Point) (c Point) (d Point) (AB Line) (CD Line) (AC Line) (BD Line))
+        (=>
+            (and
+                (not (= a b))
+                (OnL a AB)
+                (OnL b AB)
+                (not (= c d))
+                (OnL c CD)
+                (OnL d CD)
+                (not (= a c))
+                (OnL a AC)
+                (OnL c AC)
+                (not (= b d))
+                (OnL b BD)
+                (OnL d BD)
+                (SameSide a c BD)
+                (not (IntersectsLL AB CD))
+                (not (IntersectsLL AC BD))
+            )
+            (and
+                (SameSide b d AC)
+                (SameSide c d AB)
+                (SameSide a b CD)
+            )
+        )
+    )
+)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;
@@ -822,13 +855,16 @@
 ; point_in_circle_onlyif
 (assert
     (forall ((a Point) (b Point) (c Point) (alpha Circle))
-        (=> 
-            (and 
-                (Center a alpha) 
-                (OnC b alpha)
-                (Inside c alpha)
+        (!
+            (=> 
+                (and 
+                    (Center a alpha) 
+                    (OnC b alpha)
+                    (Inside c alpha)
+                )
+                (< (SegmentPP a c) (SegmentPP a b)) 
             )
-            (< (SegmentPP a c) (SegmentPP a b)) 
+            :pattern ((Center a alpha) (OnC b alpha) (Inside c alpha))
         )
     )
 )
@@ -1010,23 +1046,21 @@
 
 ; equal_angles
 (assert 
-    (forall ((a Point) (b Point) (e Point) (c Point) (f Point) (L Line) (M Line))
-        (=>
-            (and
-                (OnL a L)
-                (OnL b L)
-                (OnL e L)
-                (OnL a M)
-                (OnL c M)
-                (OnL f M)
-                (not (= b a))
-                (not (= e a))
-                (not (= c a))
-                (not (= f a))
-                (not (Between b a e))
-                (not (Between c a f))
+    (forall ((a Point) (b Point) (e Point) (c Point) (L Line) (M Line))
+        (!
+            (=>
+                (and
+                    (OnL a L)
+                    (OnL b L)
+                    (OnL e L)
+                    (OnL a M)
+                    (OnL c M)
+                    (not (= c a))
+                    (Between a b e)
+                )
+                (= (AnglePPP b a c) (AnglePPP e a c))
             )
-            (= (AnglePPP b a c) (AnglePPP e a f))
+            :pattern ((Between a b e) (OnL a L) (OnL a M) (OnL c M) (OnL e L))
         )
     )
 )
@@ -1099,24 +1133,21 @@
 ; sum_areas_if
 (assert
     (forall ((a Point) (b Point) (c Point) (d Point) (L Line))
-        (!
-            (=> 
-                (and 
-                    (OnL a L) 
-                    (OnL b L) 
-                    (OnL c L) 
-                    (not (= a b)) 
-                    (not (= a c)) 
-                    (not (= b c))
-                    (not (OnL d L)) 
-                    (Between a c b)
-                )
-                (= 
-                    (+ (AreaPPP a c d) (AreaPPP d c b)) 
-                    (AreaPPP a d b)
-                )
+        (=> 
+            (and 
+                (OnL a L) 
+                (OnL b L) 
+                (OnL c L) 
+                (not (= a b)) 
+                (not (= a c)) 
+                (not (= b c))
+                (not (OnL d L)) 
+                (Between a c b)
             )
-            :pattern ((OnL a L) (OnL b L) (OnL c L) (Between a c b) d)
+            (= 
+                (+ (AreaPPP a c d) (AreaPPP d c b)) 
+                (AreaPPP a d b)
+            )
         )
     )
 )
@@ -1142,6 +1173,39 @@
         )
     )
 )
+
+; parallelogram_area
+(assert 
+    (forall ((a Point) (b Point) (c Point) (d Point) (AB Line) (CD Line) (AC Line) (BD Line))
+        (!
+            (=>
+                (and
+                    (not (= a b))
+                    (OnL a AB)
+                    (OnL b AB)
+                    (not (= c d))
+                    (OnL c CD)
+                    (OnL d CD)
+                    (not (= a c))
+                    (OnL a AC)
+                    (OnL c AC)
+                    (not (= b d))
+                    (OnL b BD)
+                    (OnL d BD)
+                    (SameSide a c BD)
+                    (not (IntersectsLL AB CD))
+                    (not (IntersectsLL AC BD))
+                )
+                (=
+                    (+ (AreaPPP a c d) (AreaPPP a d b)) 
+                    (+ (AreaPPP b a c) (AreaPPP b c d)) 
+                )
+            )
+            :pattern ((OnL a AB) (OnL b AB) (OnL c CD) (OnL d CD) (OnL a AC) (OnL c AC) (OnL b BD) (OnL d BD) (SameSide a c BD))
+        )
+    )
+)
+
 
 ;(check-sat)
 ;(get-model)

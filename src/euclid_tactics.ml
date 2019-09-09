@@ -33,7 +33,7 @@ let constr2str env sigma term =
 let euclid_smt : unit Proofview.tactic = 
   print_endline "initializing euclid_smt..";
 
-  let cfg = [("auto_config", "true"); ("model", "false"); ("proof", "false"); ("model_validate", "false"); ("well_sorted_check", "false")] in
+  let cfg = [("timeout", "120000"); ("auto_config", "true"); ("model", "false"); ("proof", "false"); ("model_validate", "false"); ("well_sorted_check", "false")] in
   let ctx = mk_context cfg in
 
   let bool_sort = mk_sort ctx in
@@ -117,10 +117,10 @@ let euclid_smt : unit Proofview.tactic =
         let id_str = Names.Id.to_string id in
         List.assoc id_str constants
 
-    | Meta _ -> print_endline "Meta"; failwith "Meta"
-    | Evar _ -> print_endline "Evar"; failwith "Evar"
-    | Sort _ -> print_endline "Sort"; failwith "Sort"
-    | Cast _ -> print_endline "Cast"; failwith "Cast"
+    | Meta _ -> failwith "Meta"
+    | Evar _ -> failwith "Evar"
+    | Sort _ -> failwith "Sort"
+    | Cast _ -> failwith "Cast"
 
     | Prod (name, t1, t2) -> 
         (match name with
@@ -141,13 +141,14 @@ let euclid_smt : unit Proofview.tactic =
             expr_of_quantifier @@ mk_exists ctx [sort] [mk_string ctx id_str] 
               (constr2expr env sigma body constants (binders @ [Some sort]) ctx) None [] [] None None)
 
-    | LetIn _ -> print_endline "LetIn"; failwith "LetIn"
+    | LetIn _ -> failwith "LetIn"
 
     | App (func, args) -> 
-        
+        (*
         print_endline "App"; 
         print_endline (constr2str env sigma func);
         Array.iter (fun t -> print_endline (constr2str env sigma t)) args;
+        *)
         let func_str = constr2str env sigma func in
         (match func_str with
         | "not" -> 
@@ -258,7 +259,7 @@ let euclid_smt : unit Proofview.tactic =
             mk_app ctx intersects_cc_func [recur (Array.get args 0); recur (Array.get args 1)]
         | _ -> failwith func_str)
 
-    | Const _ -> print_endline "Const"; failwith "Const"
+    | Const _ -> failwith "Const"
 
     | Ind ((induct, _), _) -> 
         let s = Names.MutInd.to_string induct in
@@ -274,10 +275,10 @@ let euclid_smt : unit Proofview.tactic =
         | "Coq.Numbers.BinNums.Z", 1 -> Integer.mk_numeral_i ctx 0 
         | _ -> failwith "Construct")
 
-    | Case _ -> print_endline "Case"; failwith "Case"
-    | Fix _ -> print_endline "Fix"; failwith "Fix"
-    | CoFix _ -> print_endline "CoFix"; failwith "CoFix"
-    | Proj _ -> print_endline "Proj"; failwith "Proj"
+    | Case _ -> failwith "Case"
+    | Fix _ -> failwith "Fix"
+    | CoFix _ -> failwith "CoFix"
+    | Proj _ -> failwith "Proj"
   in
 
 
@@ -285,20 +286,6 @@ let euclid_smt : unit Proofview.tactic =
   print_endline "calling euclid_smt..";
   
   let solver = Solver.mk_solver ctx None in
-  let solver_param = Params.mk_params ctx in
-
-  Params.add_bool solver_param (mk_string ctx "smt.mbqi") true;
-  Params.add_bool solver_param (mk_string ctx "smt.ematching") true;
-  Params.add_bool solver_param (mk_string ctx "smt.mbqi.trace") true;
-  Params.add_int solver_param (mk_string ctx "smt.mbqi.max_cexs") 1;
-  Params.add_int solver_param (mk_string ctx "smt.mbqi.force_template") 0;
-  Params.add_bool solver_param (mk_string ctx "smt.qi.profile") true;
-  Params.add_float solver_param (mk_string ctx "smt.qi.eager_threshold") 10.0;
-  Params.add_int solver_param (mk_string ctx "smt.qi.max_multi_patterns") 4;
-  (*
-  Params.add_symbol solver_param (mk_string ctx "logic") (mk_string ctx "AUFLIRA");
-  *)
-  Solver.set_parameters solver solver_param;
   Solver.add solver background_theory;
 
   let env = Proofview.Goal.env gl in
@@ -311,43 +298,55 @@ let euclid_smt : unit Proofview.tactic =
     let t = EConstr.to_constr sigma (NamedDecl.get_type decl) in
     let id_str = Names.Id.to_string (NamedDecl.get_id decl) in   
     let t_str = constr2str env sigma t in
-    print_endline (id_str ^ " : " ^ t_str);
     match t_str with
     | "Point" -> (id_str, mk_const ctx (mk_string ctx id_str) point_sort) :: constants
     | "Line" -> (id_str, mk_const ctx (mk_string ctx id_str) line_sort) :: constants
     | "Circle" -> (id_str, mk_const ctx (mk_string ctx id_str) circle_sort) :: constants
     | _ -> 
         let assertion = constr2expr env sigma t constants [] ctx in
-        print_endline ("\t" ^ Expr.to_string assertion);
         Solver.add solver [assertion];
         constants
   ) hyps [] in
 
   let negated_concl = mk_not ctx (constr2expr env sigma concl constants [] ctx) in
   Solver.add solver [negated_concl];
-  print_endline "neg_concl";
-  print_endline ("\t" ^ Expr.to_string negated_concl);
 
   let all_assertions = Solver.get_assertions solver in
   List.iter (fun ass -> print_endline ("(assert\n" ^ Expr.to_string ass ^ "\n)")) all_assertions;
+  
+  let solver_param = Params.mk_params ctx in
+  Params.add_bool solver_param (mk_string ctx "smt.mbqi") true;
+  Params.add_bool solver_param (mk_string ctx "smt.ematching") true;
+  Params.add_bool solver_param (mk_string ctx "smt.mbqi.trace") true;
+  Params.add_int solver_param (mk_string ctx "smt.mbqi.max_cexs") 1;
+  Params.add_int solver_param (mk_string ctx "smt.mbqi.force_template") 0;
+  Params.add_bool solver_param (mk_string ctx "smt.qi.profile") true;
+  Params.add_float solver_param (mk_string ctx "smt.qi.eager_threshold") 10.0;
+  Params.add_int solver_param (mk_string ctx "smt.qi.max_multi_patterns") 4;
+  Solver.set_parameters solver solver_param;
 
   print_endline "Solving SMT..";
-  let res = Solver.check solver [] in
-  match res with
+  let open Proofview.Notations in
+  match Solver.check solver [] with
   |	UNSATISFIABLE ->
       print_endline "UNSAT";
-      let open Proofview.Notations in
       msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC
-      (*
-      (match Solver.get_proof solver with
-      | None -> failwith "" 
-      | Some proof ->
-          print_endline @@ Expr.to_string proof;
-          let open Proofview.Notations in
-          msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC)*)
   | UNKNOWN -> 
-      print_endline "UNKNOWN";
-      Tacticals.New.tclFAIL 1000 (Pp.str "UNKNOWN")
+      let solver_param = Params.mk_params ctx in
+      Params.add_float solver_param (mk_string ctx "smt.qi.eager_threshold") 0.5;
+      Solver.set_parameters solver solver_param;
+      print_endline "Retrying..";
+      (match Solver.check solver [] with
+      | UNSATISFIABLE ->
+          print_endline "UNSAT";
+          msg_in_tactic "tactic return" >>= fun () -> Tacticals.New.tclIDTAC
+      | UNKNOWN ->
+          print_endline "UNKNOWN";
+          Tacticals.New.tclFAIL 1000 (Pp.str "UNKNOWN")
+      |	SATISFIABLE -> 
+          print_endline "SAT";
+          Tacticals.New.tclFAIL 1000 (Pp.str "SAT") 
+      )
   |	SATISFIABLE -> 
       print_endline "SAT";
       Tacticals.New.tclFAIL 1000 (Pp.str "SAT")  (* find a suitable error level so that we can capture the error in Coq *)

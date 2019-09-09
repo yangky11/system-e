@@ -1,3 +1,4 @@
+Add ML Path "/Users/yangky/.opam/4.07.1+flambda/lib/z3".
 Require Import SystemE.Axioms.
 
 
@@ -992,3 +993,359 @@ Proof.
     euclid_trivial.
 all: fail. Admitted.
 
+
+
+Theorem proposition_35 : forall (a b c d e f : Point) (AF BC AB CD EB FC : Line),
+    Parallelogram a d b c AF BC AB CD /\ Parallelogram e f b c AF BC EB FC /\ (Between a d f) /\ (Between a e f) ->
+    area2real (AreaPPP a b d) + area2real (AreaPPP d b c) = area2real (AreaPPP e b c) + area2real (AreaPPP e c f).
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.intersection_lines CD EB) as g.
+    euclid_apply (ConstructionRules.line_from_points b d) as BD.
+    euclid_apply (proposition_34 a d b c AF BC AB CD BD).
+    euclid_apply (ConstructionRules.line_from_points f b) as FB.
+    euclid_apply (proposition_34 e f b c AF BC EB FC FB).
+    euclid_trivial (SegmentPP a d == SegmentPP e f)%segment.
+    euclid_trivial (SegmentPP a e == SegmentPP d f)%segment.
+    euclid_apply (ConstructionRules.extend_point CD c d) as d'.
+    euclid_apply (ConstructionRules.extend_point AB b a) as a'.
+    euclid_apply (ConstructionRules.extend_point AF f a) as a''.
+    euclid_apply (proposition_29 d' c a' b f a'' d a CD AB AF).
+    euclid_apply (proposition_4 a e b d f c AF EB AB AF FC CD).
+    euclid_apply (MetricInferences.area_congruence a e b d f c).
+    euclid_case (Between a d e).
+    + euclid_apply (TransferInferences.sum_areas_if a e d b AF).
+       euclid_apply (TransferInferences.sum_areas_if f d e c AF).
+       euclid_apply (TransferInferences.sum_areas_if b e g d EB).
+       euclid_apply (TransferInferences.sum_areas_if c d g e CD).
+       euclid_trivial (area2real (AreaPPP a d b) + area2real (AreaPPP b g d) = area2real (AreaPPP e c f) + area2real (AreaPPP c g e)).
+       euclid_trivial (area2real (AreaPPP a d b) + area2real (AreaPPP b g d) + area2real (AreaPPP g b c) = area2real (AreaPPP e c f) + area2real (AreaPPP c g e) + area2real (AreaPPP g b c)).
+       euclid_apply (TransferInferences.sum_areas_if c d g b CD).
+       euclid_apply (TransferInferences.sum_areas_if b e g c EB).
+       euclid_trivial. 
+    + euclid_case (d = e).
+        - euclid_trivial.
+        - euclid_trivial (Between a e d).
+           euclid_trivial (Between g e b).
+           euclid_trivial (area2real (AreaPPP a e b) + area2real (AreaPPP g b c) = area2real (AreaPPP d f c) + area2real (AreaPPP g b c)).
+           euclid_apply (TransferInferences.sum_areas_if a d e b AF).
+           euclid_apply (TransferInferences.sum_areas_if f e d c AF).
+           euclid_apply (TransferInferences.sum_areas_if g b e d EB).
+           euclid_apply (TransferInferences.sum_areas_if g c d e CD).
+           euclid_apply (TransferInferences.sum_areas_if g c d b CD).
+           euclid_apply (TransferInferences.sum_areas_if g b e c EB).
+           euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_35' : forall (a b c d e f : Point) (AF BC AB CD EB FC : Line),
+    Parallelogram a d b c AF BC AB CD /\ Parallelogram e f b c AF BC EB FC ->
+    area2real (AreaPPP a b d) + area2real (AreaPPP d b c) = area2real (AreaPPP e b c) + area2real (AreaPPP e c f).
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.line_from_points b d) as BD.
+    euclid_apply (proposition_34 a d b c AF BC AB CD BD).
+    euclid_apply (ConstructionRules.line_from_points f b) as FB.
+    euclid_apply (proposition_34 e f b c AF BC EB FC FB).
+    euclid_trivial (SegmentPP a d == SegmentPP e f)%segment.
+    euclid_case (Between a d f).
+    + euclid_trivial (Between a e f).
+       euclid_apply (proposition_35 a b c d e f AF BC AB CD EB FC).
+       assumption.
+    + euclid_case (a = e).
+       - euclid_trivial (d = f).
+          euclid_apply (ConstructionRules.line_from_points a c) as AC.
+          euclid_apply (ConstructionRules.intersection_lines AC BD) as g.
+          euclid_trivial.
+       - euclid_trivial (Between e f d).
+          euclid_trivial (Between e a d).
+          euclid_apply (proposition_35 e b c f a d AF BC EB FC AB CD).
+          euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_36 : forall (a b c d e f g h : Point) (AH BG AB CD EF HG : Line) ,
+    Parallelogram a d b c AH BG AB CD /\ Parallelogram e h f g AH BG EF HG /\
+    (SegmentPP b c == SegmentPP f g)%segment /\ (Between a d h) /\ (Between a e h) ->
+    area2real (AreaPPP a b d) + area2real (AreaPPP d b c) = area2real (AreaPPP e f h) + area2real (AreaPPP h f g).
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.line_from_points b e) as BE.
+    euclid_apply (ConstructionRules.line_from_points c h) as CH.
+    euclid_apply (ConstructionRules.line_from_points h f) as HF.
+    euclid_apply (proposition_34 e h f g AH BG EF HG HF).
+    euclid_trivial (SegmentPP b c== SegmentPP e h)%segment.
+    euclid_apply (proposition_33 e h b c AH BG BE CH).
+    euclid_trivial (Parallelogram e h b c AH BG BE CH).
+    euclid_apply (proposition_35 a b c d e h AH BG AB CD BE CH).
+    euclid_apply (proposition_35' g h e f c b BG AH HG EF CH BE).
+    euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_36' : forall (a b c d e f g h : Point) (AH BG AB CD EF HG : Line) ,
+    Parallelogram a d b c AH BG AB CD /\ Parallelogram e h f g AH BG EF HG /\
+    (SegmentPP b c == SegmentPP f g)%segment ->
+    area2real (AreaPPP a b d) + area2real (AreaPPP d b c) = area2real (AreaPPP e f h) + area2real (AreaPPP h f g).
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.line_from_points b e) as BE.
+    euclid_apply (ConstructionRules.line_from_points c h) as CH.
+    euclid_case (SameSide e b CH).
+    + euclid_apply (ConstructionRules.line_from_points h f) as HF.
+       euclid_apply (proposition_34 e h f g AH BG EF HG HF).
+       euclid_trivial (SegmentPP b c== SegmentPP e h)%segment.
+       euclid_apply (proposition_33 e h b c AH BG BE CH).
+       euclid_trivial (Parallelogram e h b c AH BG BE CH).
+       euclid_apply (proposition_35' a b c d e h AH BG AB CD BE CH). 
+       euclid_apply (proposition_35' g h e f c b BG AH HG EF CH BE).
+       euclid_trivial.
+    + euclid_apply (ConstructionRules.line_from_points b h) as BH.
+       euclid_apply (ConstructionRules.line_from_points c e) as CE.
+       euclid_apply (ConstructionRules.line_from_points e g) as EG.
+       euclid_apply (proposition_34 h e g f AH BG HG EF EG).
+       euclid_trivial (SegmentPP b c== SegmentPP e h)%segment.
+       euclid_apply (proposition_33 h e b c AH BG BH CE).
+       euclid_trivial (Parallelogram h e b c AH BG BH CE).
+       euclid_apply (proposition_35' a b c d h e AH BG AB CD BH CE).
+       euclid_apply (proposition_35' f e h g c b BG AH EF HG CE BH).
+       euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_37 : forall (a b c d : Point) (AB BC AC BD CD AD : Line),
+    Triangle a b c AB BC AC /\ Triangle d b c BD BC CD /\ DistinctPointsOnL a d AD /\
+    ~(IntersectsLL AD BC) /\ (SameSide d c AB) ->
+    (AreaPPP a b c == AreaPPP d b c)%area.
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_31 b a c AC) as BE.
+    euclid_apply (ConstructionRules.intersection_lines AD BE) as e.
+    euclid_apply (proposition_31 c b d BD) as CF.
+    euclid_apply (ConstructionRules.intersection_lines AD CF) as f.
+    euclid_apply (proposition_35 e b c a d f AD BC BE AC BD CF).
+    euclid_apply (proposition_34 e a b c AD BC BE AC AB).
+    euclid_apply (proposition_34 f d c b AD BC CF BD CD).
+    euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_38 : forall (a b c d e f: Point) (AD BF AB AC DE DF : Line),
+    a on_line AD /\ d on_line AD /\ Triangle a b c AB BF AC /\ Triangle d e f DE BF DF /\
+    ~(IntersectsLL AD BF) /\ (Between b c f) /\ (Between b e f) /\ (SegmentPP b c == SegmentPP e f)%segment ->
+    (AreaPPP a b c == AreaPPP d e f)%area.
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_31 b a c AC) as BG.
+    euclid_apply (ConstructionRules.intersection_lines AD BG) as g.
+    euclid_apply (proposition_31 f d e DE) as FH.
+    euclid_apply (ConstructionRules.intersection_lines AD FH) as h.
+    euclid_apply (proposition_36' g b c a d e f h AD BF BG AC DE FH).
+    euclid_apply (proposition_34 g a b c AD BF BG AC AB).
+    euclid_apply (proposition_34 e f d h BF AD DE FH DF).
+    euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_39 : forall (a b c d : Point) (AB BC AC BD CD AD : Line) ,
+    Triangle a b c AB BC AC /\ Triangle d b c BD BC CD /\ SameSide a d BC /\ 
+    (AreaPPP a b c == AreaPPP d b c)%area /\ DistinctPointsOnL a d AD ->
+    ~(IntersectsLL AD BC).
+Proof.
+    euclid_intros.
+    euclid_contradict.
+    euclid_case (SameSide c d AB).
+    + euclid_apply (proposition_31 a b c BC) as AE.
+       euclid_apply (ConstructionRules.intersection_lines AE BD) as e.
+       euclid_apply (ConstructionRules.line_from_points e c) as EC.
+       euclid_apply (proposition_37 a b c e AB BC AC BD EC AE). 
+       euclid_trivial (AreaPPP e b c == AreaPPP d b c)%area.
+       euclid_trivial.
+    + euclid_trivial (SameSide c a BD).
+       euclid_apply (proposition_31 d b c BC) as DE.
+       euclid_apply (ConstructionRules.intersection_lines DE AB) as e.
+       euclid_apply (ConstructionRules.line_from_points e c) as EC.
+       euclid_apply (proposition_37 d b c e BD BC CD AB EC DE).
+       euclid_trivial (AreaPPP e b c == AreaPPP a b c)%area.
+       euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_40 : forall  (a b c d e : Point) (AB BC AC CD DE AD : Line),
+    Triangle a b c AB BC AC /\ Triangle d c e CD BC DE /\ SameSide a d BC /\ (SegmentPP b c == SegmentPP c e)%segment /\
+    DistinctPointsOnL a d AD /\ (AreaPPP a b c == AreaPPP d c e)%area ->
+    ~(IntersectsLL AD BC).
+Proof.
+    euclid_intros. 
+    euclid_case (b = e).
+    + euclid_apply (proposition_39 a b c d AB BC AC DE CD AD).
+       assumption.
+    + euclid_contradict.
+       euclid_trivial (Between b c e).
+       euclid_case (SameSide c d AB).
+       - euclid_apply (proposition_31 a b c BC) as AF.
+          euclid_apply (ConstructionRules.intersection_lines AF CD) as f.
+          euclid_case (a = f).
+          * euclid_apply (ConstructionRules.intersection_lines AF DE) as g.
+            euclid_apply (ConstructionRules.line_from_points g c) as GC.
+            euclid_apply (proposition_38  a b c g c e AF BC AB AC GC DE).
+            euclid_trivial (AreaPPP d c e == AreaPPP g c e)%area.
+            euclid_trivial.
+          * euclid_apply (ConstructionRules.line_from_points f e) as FE.
+            euclid_apply (proposition_38  a b c f c e AF BC AB AC CD FE).
+            euclid_trivial (AreaPPP d c e == AreaPPP f c e)%area.
+            euclid_apply (TransferInferences.degenerated_area_if d f e CD).
+            euclid_trivial.
+       - euclid_apply (proposition_31 a b c BC) as AF.
+          euclid_apply (ConstructionRules.intersection_lines AF DE) as f.
+          euclid_case (a = f).
+          * euclid_apply (ConstructionRules.intersection_lines AF CD) as g.
+            euclid_apply (ConstructionRules.line_from_points g e) as GE.
+            euclid_apply (proposition_38  a b c g c e AF BC AB AC CD GE).
+            euclid_trivial (AreaPPP d c e == AreaPPP g c e)%area.
+            euclid_trivial.
+          * euclid_apply (ConstructionRules.line_from_points f c) as FC.
+            euclid_apply (proposition_38 a b c f c e AF BC AB AC FC DE).
+            euclid_trivial (AreaPPP d c e == AreaPPP f c e)%area. (* remove *)
+            euclid_trivial (area2real (AreaPPP d f c) = 0).
+            euclid_apply (TransferInferences.degenerated_area_if c d f CD).
+            euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_41 : forall (a b c d e : Point) (AE BC AB CD BE CE : Line) , 
+    Parallelogram a d b c AE BC AB CD /\ Triangle e b c BE BC CE /\ e on_line AE /\ ~(IntersectsLL AE BC) ->
+    (area2real (AreaPPP a b c) + area2real (AreaPPP a c d) = area2real (AreaPPP e b c) + area2real (AreaPPP e b c)).
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.line_from_points a c) as AC.
+    euclid_case (a = e).
+    + euclid_trivial (AreaPPP a b c == AreaPPP e b c)%area.
+       euclid_apply (proposition_34 d a c b AE BC CD AB AC).
+       euclid_trivial.
+    + euclid_case (SameSide e c AB).
+       - euclid_apply (proposition_37 a b c e AB BC AC BE CE AE).
+          euclid_apply (proposition_34 d a c b AE BC CD AB AC).
+          euclid_trivial.
+       - euclid_apply (proposition_37 e b c a BE BC CE AB AC AE).
+          euclid_apply (proposition_34 d a c b AE BC CD AB AC).
+          euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_42 : forall (a b c d1 d2 d3 : Point) (AB BC AC D12 D23: Line),
+    Triangle a b c AB BC AC /\ RectilinearAngle d1 d2 d3 D12 D23 /\ 
+    angle2real (AnglePPP d1 d2 d3) > 0 /\ angle2real (AnglePPP d1 d2 d3) < RightAngle + RightAngle ->
+    exists (f g e c' : Point) (FG EC EF CG : Line),  Parallelogram f g e c' FG EC EF CG /\ 
+    (AnglePPP c' e f == AnglePPP d1 d2 d3)%angle /\
+    (area2real (AreaPPP f e c') + area2real (AreaPPP f c' g) = area2real (AreaPPP a b c)).
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_10 b c BC) as e.
+    euclid_apply (ConstructionRules.line_from_points a e) as AE.
+    euclid_apply (proposition_23'' e c d2 d1 d3 a BC D12 D23) as f'.
+    euclid_apply (ConstructionRules.line_from_points e f') as EF.
+    euclid_apply (proposition_31 a b c BC) as AG.
+    euclid_apply (ConstructionRules.intersection_lines AG EF) as f.
+    euclid_apply (proposition_31 c e f EF) as CG.
+    euclid_apply (ConstructionRules.intersection_lines CG AG) as g.
+    euclid_trivial (Parallelogram f g e c AG BC EF CG).
+    euclid_apply (proposition_38 a b e a e c AG BC AB AE AE AC).
+    euclid_trivial (area2real (AreaPPP a b c) = area2real (AreaPPP a e c) + area2real (AreaPPP a e c)).
+    euclid_apply (proposition_41 f e c g a AG BC EF CG AE AC).
+    exists f.
+    exists g.
+    exists e.
+    exists c.
+    exists AG.
+    exists BC.
+    exists EF.
+    exists CG.
+    euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_42' : forall (a b c d1 d2 d3 e : Point) (AB BC AC D12 D23: Line),
+    Triangle a b c AB BC AC /\ RectilinearAngle d1 d2 d3 D12 D23 /\ Between b e c /\ (SegmentPP b e == SegmentPP e c)%segment /\
+    angle2real (AnglePPP d1 d2 d3) > 0 /\ angle2real (AnglePPP d1 d2 d3) < RightAngle + RightAngle ->
+    exists (f g : Point) (FG EF CG : Line),  Parallelogram f g e c FG BC EF CG /\ 
+    (AnglePPP c e f == AnglePPP d1 d2 d3)%angle /\
+    (area2real (AreaPPP f e c) + area2real (AreaPPP f c g) = area2real (AreaPPP a b c)).
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.line_from_points a e) as AE.
+    euclid_apply (proposition_23'' e c d2 d1 d3 a BC D12 D23) as f'.
+    euclid_apply (ConstructionRules.line_from_points e f') as EF.
+    euclid_apply (proposition_31 a b c BC) as AG.
+    euclid_apply (ConstructionRules.intersection_lines AG EF) as f.
+    euclid_apply (proposition_31 c e f EF) as CG.
+    euclid_apply (ConstructionRules.intersection_lines CG AG) as g.
+    euclid_trivial (Parallelogram f g e c AG BC EF CG).
+    euclid_apply (proposition_38 a b e a e c AG BC AB AE AE AC).
+    euclid_trivial (area2real (AreaPPP a b c) = area2real (AreaPPP a e c) + area2real (AreaPPP a e c)).
+    euclid_apply (proposition_41 f e c g a AG BC EF CG AE AC).
+    exists f.
+    exists g.
+    exists AG.
+    exists EF.
+    exists CG.
+    euclid_trivial.
+all: fail. Admitted.
+
+Theorem proposition_42'' : forall (a b c d1 d2 d3 h i : Point) (AB BC AC D12 D23 HI : Line),
+    Triangle a b c AB BC AC /\ RectilinearAngle d1 d2 d3 D12 D23 /\ 
+    angle2real (AnglePPP d1 d2 d3) > 0 /\ angle2real (AnglePPP d1 d2 d3) < RightAngle + RightAngle /\
+    DistinctPointsOnL h i HI ->
+    exists (f g j : Point) (FG FI GJ : Line), Between h i j /\ Parallelogram f g i j FG HI FI GJ /\ 
+    (AnglePPP j i f == AnglePPP d1 d2 d3)%angle /\
+    (area2real (AreaPPP f i j) + area2real (AreaPPP f j g) = area2real (AreaPPP a b c)).
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_10 b c BC) as e.
+    euclid_apply (ConstructionRules.extend_point_longer HI h i (SegmentPP e c)) as i'.
+    euclid_apply (proposition_3 i i' e c HI BC) as j.
+    euclid_apply (ConstructionRules.extend_point_longer HI i h (SegmentPP e c)) as h'.
+    euclid_apply (proposition_3 i h' e c HI BC) as k.
+    euclid_apply (proposition_23 k j b a c HI AB BC) as l'.
+    euclid_apply (ConstructionRules.line_from_points k l') as KL.
+    euclid_apply (ConstructionRules.extend_point_longer KL k l' (SegmentPP a b)) as l''.
+    euclid_apply (proposition_3 k l'' b a KL AB) as l.
+    euclid_apply (ConstructionRules.line_from_points l j) as LJ.
+    euclid_apply (TransferInferences.between_if k i j).
+    euclid_apply (TransferInferences.between_if b e c).
+    euclid_apply (proposition_4 k j l b c a HI LJ KL BC AC AB).
+    euclid_apply (MetricInferences.area_congruence k j l b c a).
+    euclid_apply (proposition_42' l k j d1 d2 d3 i KL HI LJ D12 D23) as f g.
+    destruct Hfg as [FG Hfg']. 
+    destruct Hfg' as [FI Hfg]. 
+    destruct Hfg as [GJ Hfg']. 
+    exists f.
+    exists g.
+    exists j.
+    exists FG.
+    exists FI.
+    exists GJ.
+    euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_43 : forall (a b c d e f g h k : Point) (AD BC AB CD AC EF GH : Line), 
+    Parallelogram a d b c AD BC AB CD /\ DistinctPointsOnL a c AC /\ k on_line AC /\
+    Between a h d /\ Parallelogram a h e k AD EF AB GH /\ Parallelogram k f g c EF BC GH CD ->
+    (area2real (AreaPPP e b g) + area2real (AreaPPP e g k) = area2real (AreaPPP h k f) + area2real (AreaPPP h f d)).
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_34 d a c b AD BC CD AB AC).
+    euclid_apply (proposition_34 h a k e AD EF GH AB AC).
+    euclid_apply (proposition_34 f k c g EF BC CD GH AC).
+    euclid_trivial (area2real (AreaPPP a e k) + area2real (AreaPPP k g c) = area2real (AreaPPP a h k) + area2real (AreaPPP k f c)).
+    euclid_apply (TransferInferences.sum_areas_if a c k b AC).
+    euclid_apply (TransferInferences.sum_areas_if a b e c AB).
+    euclid_apply (TransferInferences.sum_areas_if b c g k BC).
+    euclid_trivial (area2real (AreaPPP a e k) + area2real (AreaPPP k g c) + area2real (AreaPPP e b g) + area2real (AreaPPP e g k) = area2real (AreaPPP b a c)).
+    euclid_apply (TransferInferences.sum_areas_if a c k d AC).
+    euclid_apply (TransferInferences.sum_areas_if a d h k AD).
+    euclid_apply (TransferInferences.sum_areas_if c d f k CD).
+    euclid_trivial (area2real (AreaPPP a h k) + area2real (AreaPPP k f c) + area2real (AreaPPP h k f) + area2real (AreaPPP h f d) = area2real (AreaPPP d a c)).
+    euclid_trivial.
+all: fail. Admitted.

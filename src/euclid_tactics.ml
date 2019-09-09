@@ -33,7 +33,7 @@ let constr2str env sigma term =
 let euclid_smt : unit Proofview.tactic = 
   print_endline "initializing euclid_smt..";
 
-  let cfg = [("timeout", "120000"); ("auto_config", "true"); ("model", "false"); ("proof", "false"); ("model_validate", "false"); ("well_sorted_check", "false")] in
+  let cfg = [("timeout", "180000"); ("auto_config", "true"); ("model", "false"); ("proof", "false"); ("model_validate", "false"); ("well_sorted_check", "false")] in
   let ctx = mk_context cfg in
 
   let bool_sort = mk_sort ctx in

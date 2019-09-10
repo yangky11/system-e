@@ -981,19 +981,16 @@
 
 ; perpendicular_if
 (assert
-    (forall ((a Point) (b Point) (c Point) (d Point) (L Line))
-        (!
-            (=> 
-                (and 
-                    (OnL a L) 
-                    (OnL b L) 
-                    (Between a c b) 
-                    (not (OnL d L))
-                    (= (AnglePPP a c d) (AnglePPP d c b))
-                )   
-                (= (AnglePPP a c d) RightAngle)
-            )
-            :pattern ((OnL a L) (OnL b L) (Between a c b) (= (AnglePPP a c d) (AnglePPP d c b)))
+    (forall ((a Point) (b Point) (c Point) (d Point) (L Line)) 
+        (=> 
+            (and 
+                (OnL a L) 
+                (OnL b L) 
+                (Between a c b) 
+                (not (OnL d L))
+                (= (AnglePPP a c d) (AnglePPP d c b))
+            )   
+            (= (AnglePPP a c d) RightAngle)
         )
     )
 )

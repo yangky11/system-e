@@ -144,11 +144,9 @@ let euclid_smt : unit Proofview.tactic =
     | LetIn _ -> failwith "LetIn"
 
     | App (func, args) -> 
-        (*
         print_endline "App"; 
         print_endline (constr2str env sigma func);
         Array.iter (fun t -> print_endline (constr2str env sigma t)) args;
-        *)
         let func_str = constr2str env sigma func in
         (match func_str with
         | "not" -> 
@@ -171,6 +169,8 @@ let euclid_smt : unit Proofview.tactic =
             mk_or ctx [recur (Array.get args 0); recur (Array.get args 1)]
         | "Rplus" ->
             mk_add ctx [recur (Array.get args 0); recur (Array.get args 1)]
+        | "Rmult" ->
+            mk_mul ctx  [recur (Array.get args 0); recur (Array.get args 1)]
         | "IZR" ->
             Integer.mk_int2real ctx (recur (Array.get args 0))
         | "segment2real"

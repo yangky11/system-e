@@ -16,7 +16,6 @@ Proof.
 all: fail. Admitted.
 
 
-(* a generalized version of proposition_1 that is required by later theorems *)
 Theorem proposition_1' : forall (a b f : Point) (AB : Line), 
     DistinctPointsOnL a b AB /\ ~(f on_line AB) ->
     exists c : Point, 
@@ -1349,3 +1348,140 @@ Proof.
     euclid_trivial (area2real (AreaPPP a h k) + area2real (AreaPPP k f c) + area2real (AreaPPP h k f) + area2real (AreaPPP h f d) = area2real (AreaPPP d a c)).
     euclid_trivial.
 all: fail. Admitted.
+
+(* prop 44 can be applied on either side*)
+(* different from the book *)
+Theorem proposition_44 : forall (a b c1 c2 c3 d1 d2 d3 : Point) (AB C12 C23 C31 D12 D23 : Line),
+    Triangle c1 c2 c3 C12 C23 C31 /\ RectilinearAngle d1 d2 d3 D12 D23 /\ DistinctPointsOnL a b AB /\ 
+    angle2real (AnglePPP d1 d2 d3) > 0 /\ angle2real (AnglePPP d1 d2 d3) < RightAngle + RightAngle ->
+    exists (m l : Point) (BM AL ML : Line),  Parallelogram b m a l BM AL AB ML /\ 
+    (AnglePPP a b m == AnglePPP d1 d2 d3)%angle /\
+    (area2real (AreaPPP a b m) + area2real (AreaPPP a l m) = area2real (AreaPPP c1 c2 c3)).
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_42'' c1 c2 c3 d1 d2 d3 a b C12 C23 C31 D12 D23 AB) as g f.
+    destruct Hgf as [e [FG [BG [EF Hgfbe]]]].
+    destruct_conj Hgfbe.
+    euclid_apply (proposition_31 a b g BG) as AH.
+    euclid_apply (proposition_30 AH EF BG).
+    euclid_apply (ConstructionRules.intersection_lines AH FG) as h.
+    euclid_apply (ConstructionRules.line_from_points h b) as HB.
+    euclid_apply (ConstructionRules.extend_point EF e f) as f'.
+    euclid_apply (ConstructionRules.extend_point AH a h) as h'.
+    euclid_apply (ConstructionRules.extend_point FG h f) as f''.
+    euclid_apply (ConstructionRules.extend_point FG f h) as h''.
+    euclid_apply (proposition_29 f' e h' a f'' h'' f h EF AH FG).
+    euclid_apply (TransferInferences.sum_angles_onlyif h g a b FG AH).
+    euclid_trivial (AnglePPP b h g < AnglePPP f h a).
+    euclid_trivial (angle2real (AnglePPP b h g) + angle2real (AnglePPP e f h) < RightAngle + RightAngle).
+    euclid_trivial (IntersectsLL HB EF).
+    euclid_apply (ConstructionRules.intersection_lines HB EF) as k.
+    euclid_apply (proposition_31 k e a AB) as KL.
+    euclid_apply (proposition_30 KL FG AB).
+    euclid_apply (ConstructionRules.intersection_lines AH KL) as l.
+    euclid_apply (ConstructionRules.intersection_lines BG KL) as m.
+    euclid_trivial (Parallelogram h l f k AH EF FG KL).
+    euclid_apply (proposition_43 h f k l g m e a b AH EF FG KL HB BG AB).
+    exists m.
+    exists l.
+    exists BG.
+    exists AH.
+    exists KL.
+    euclid_trivial (area2real (AreaPPP a b m) + area2real (AreaPPP a m l) = area2real (AreaPPP c1 c2 c3)).
+    euclid_apply (proposition_15 e a m g b AB BG).    
+    euclid_trivial (AnglePPP a b m == AnglePPP d1 d2 d3)%angle.
+    euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_45 : forall (a b c d e1 e2 e3 : Point) (AB BC CD AD DB E12 E23 : Line), 
+    Triangle a b d AB DB AD /\ Triangle b c d BC CD DB /\ OppositeSide a c DB /\
+    RectilinearAngle e1 e2 e3 E12 E23 /\ angle2real (AnglePPP e1 e2 e3) > 0 /\ angle2real (AnglePPP e1 e2 e3) < RightAngle + RightAngle ->
+    exists (f l k m : Point) (FL KM FK LM : Line), Parallelogram f l k m FL KM FK LM /\ 
+    (AnglePPP f k m == AnglePPP e1 e2 e3)%angle /\
+    (area2real (AreaPPP f k m) + area2real (AreaPPP f l m) = area2real (AreaPPP a b d) + area2real (AreaPPP d b c)).
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_42 a b d e1 e2 e3 AB DB AD E12 E23) as f g.
+    destruct Hfg as [k [h [FG [KH [FK [GH Hfgkh]]]]]].
+    destruct_conj Hfgkh.
+    euclid_apply (proposition_44 g h d b c e1 e2 e3 GH DB BC CD E12 E23) as m l.
+    destruct Hml as [HM [GL [LM Hhmgl]]].
+    destruct_conj Hhmgl.
+    euclid_trivial (AnglePPP h k f == AnglePPP g h m)%angle.
+    euclid_trivial (angle2real (AnglePPP h k f) + angle2real (AnglePPP k h g) = angle2real (AnglePPP g h m) + angle2real (AnglePPP k h g)).
+    euclid_apply (ConstructionRules.extend_point FK f k) as k'.
+    euclid_apply (ConstructionRules.extend_point GH g h) as h'.
+    euclid_apply (ConstructionRules.extend_point KH h k) as k''.
+    euclid_apply (ConstructionRules.extend_point KH k h) as h''.
+    euclid_apply (proposition_29 k' f h' g k'' h'' k h FK GH KH).
+    euclid_trivial (angle2real (AnglePPP k h g) + angle2real (AnglePPP g h m) = RightAngle + RightAngle).
+    
+    euclid_trivial (~(k on_line GH)).
+    euclid_trivial (~(m on_line GH)).
+    Admitted.
+    (* prop 44 can be applied on either side
+    euclid_trivial (~(SameSide k m GH)).
+    euclid_apply (proposition_14 g h k m GH KH HM).
+*)
+
+
+Theorem proposition_11'' : forall (a b : Point) (AB : Line), 
+    DistinctPointsOnL a b AB ->
+    exists f : Point, ~(f on_line AB) /\ (AnglePPP a b f == RightAngle)%angle.
+Proof.
+    euclid_intros.
+    euclid_apply (ConstructionRules.extend_point AB a b) as c.
+    euclid_apply (proposition_11 a c b AB) as f.
+    exists f.
+    euclid_trivial.
+all: fail. Admitted.
+
+ (* prop_46 on either side *)
+Theorem proposition_46 : forall (a b : Point) (AB : Line), DistinctPointsOnL a b AB ->
+    exists (d e : Point) (DE AD BE : Line), Parallelogram d e a b DE AB AD BE /\ 
+    (SegmentPP d e == SegmentPP a b)%segment /\ (SegmentPP a d == SegmentPP a b)%segment /\ (SegmentPP b e == SegmentPP a b)%segment /\
+    (AnglePPP b a d == RightAngle)%angle /\ (AnglePPP a d e == RightAngle)%angle /\ (AnglePPP a b e == RightAngle)%angle /\ (AnglePPP b e d == RightAngle)%angle.
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_11'' b a AB) as c'.
+    euclid_apply (ConstructionRules.line_from_points a c') as AC.
+    euclid_apply (ConstructionRules.extend_point_longer AC a c' (SegmentPP a b)) as c.
+    euclid_apply (proposition_3 a c a b AC AB) as d.
+    euclid_apply (proposition_31 d a b AB) as DE.
+    euclid_apply (proposition_31 b a d AC) as BE.
+    euclid_apply (ConstructionRules.intersection_lines DE BE) as e.
+    euclid_trivial (Parallelogram d e a b DE AB AC BE).
+    euclid_apply (ConstructionRules.line_from_points a e) as AE.
+    euclid_apply (proposition_34 d e a b DE AB AC BE AE).
+    euclid_apply (ConstructionRules.extend_point DE e d) as d'.
+    euclid_apply (ConstructionRules.extend_point AB b a) as a'.
+    euclid_apply (ConstructionRules.extend_point AC c a) as a''.
+    euclid_apply (proposition_29 d' e a' b c a'' d a DE AB AC).
+    euclid_trivial (AnglePPP a d e == RightAngle)%angle.
+    exists d.
+    exists e.
+    exists DE.
+    exists AC.
+    exists BE.
+    euclid_trivial.
+all: fail. Admitted.
+
+
+Theorem proposition_47 : forall (a b c : Point) (AB BC AC : Line), 
+    Triangle a b c AB BC AC /\ (AnglePPP b a c == RightAngle)%angle ->
+    segment2real (SegmentPP b c) * segment2real (SegmentPP b c) = segment2real (SegmentPP b a) * segment2real (SegmentPP b a) + segment2real (SegmentPP a c) * segment2real (SegmentPP a c).
+Proof.
+    euclid_intros.
+    (* prop_46 on either side *)
+    Admitted.
+
+
+
+Theorem proposition_48 : forall (a b c : Point) (AB BC AC : Line),
+    Triangle a b c AB BC AC /\ segment2real (SegmentPP b c) * segment2real (SegmentPP b c) = segment2real (SegmentPP b a) * segment2real (SegmentPP b a) + segment2real (SegmentPP a c) * segment2real (SegmentPP a c) ->
+    (AnglePPP b a c == RightAngle)%angle.
+Proof.
+    euclid_intros.
+    euclid_apply (proposition_11'' a c AC).
+    Admitted.

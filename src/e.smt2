@@ -1203,6 +1203,5 @@
     )
 )
 
-
 ;(check-sat)
 ;(get-model)

@@ -597,29 +597,28 @@
 ; parallelogram_same_side
 (assert 
     (forall ((a Point) (b Point) (c Point) (d Point) (AB Line) (CD Line) (AC Line) (BD Line))
-        (=>
-            (and
-                (not (= a b))
-                (OnL a AB)
-                (OnL b AB)
-                (not (= c d))
-                (OnL c CD)
-                (OnL d CD)
-                (not (= a c))
-                (OnL a AC)
-                (OnL c AC)
-                (not (= b d))
-                (OnL b BD)
-                (OnL d BD)
-                (SameSide a c BD)
-                (not (IntersectsLL AB CD))
-                (not (IntersectsLL AC BD))
+        (!
+            (=>
+                (and
+                    (OnL a AB)
+                    (OnL b AB)
+                    (OnL c CD)
+                    (OnL d CD)
+                    (OnL a AC)
+                    (OnL c AC)
+                    (not (= b d))
+                    (OnL b BD)
+                    (OnL d BD)
+                    (SameSide c d AB)
+                    (not (IntersectsLL AC BD))
+                )
+                (and
+                    (SameSide b d AC)
+                    (SameSide a c BD)
+                    (SameSide a b CD)
+                )
             )
-            (and
-                (SameSide b d AC)
-                (SameSide c d AB)
-                (SameSide a b CD)
-            )
+            :pattern ((OnL a AB) (OnL b AB) (SameSide c d AB) CD AC BD)
         )
     )
 )
@@ -1173,24 +1172,18 @@
 
 ; parallelogram_area
 (assert 
-    (forall ((a Point) (b Point) (c Point) (d Point) (AB Line) (CD Line) (AC Line) (BD Line))
+    (forall ((a Point) (b Point) (c Point) (d Point) (AB Line) (AC Line) (BD Line))
         (!
             (=>
                 (and
-                    (not (= a b))
                     (OnL a AB)
                     (OnL b AB)
-                    (not (= c d))
-                    (OnL c CD)
-                    (OnL d CD)
-                    (not (= a c))
                     (OnL a AC)
                     (OnL c AC)
                     (not (= b d))
                     (OnL b BD)
                     (OnL d BD)
-                    (SameSide a c BD)
-                    (not (IntersectsLL AB CD))
+                    (SameSide c d AB)
                     (not (IntersectsLL AC BD))
                 )
                 (=
@@ -1198,7 +1191,35 @@
                     (+ (AreaPPP b a c) (AreaPPP b c d)) 
                 )
             )
-            :pattern ((OnL a AB) (OnL b AB) (OnL c CD) (OnL d CD) (OnL a AC) (OnL c AC) (OnL b BD) (OnL d BD) (SameSide a c BD))
+            :pattern ((OnL a AB) (OnL b AB) (OnL a AC) (OnL c AC) (OnL b BD) (OnL d BD) (SameSide a c BD))
+        )
+    )
+)
+
+; sum_parallelograms_area
+(assert 
+    (forall ((a Point) (b Point) (c Point) (d Point) (e Point) (f Point) (AB Line) (AC Line) (BD Line))
+        (!
+            (=>
+                (and
+                    (OnL a AB)
+                    (OnL b AB)
+                    (OnL a AC)
+                    (OnL c AC)
+                    (not (= b d))
+                    (OnL b BD)
+                    (OnL d BD)
+                    (SameSide c d AB)
+                    (not (IntersectsLL AC BD))
+                    (Between a e b)
+                    (Between c f d)
+                )
+                (=
+                    (+ (AreaPPP a c f) (AreaPPP a f e) (AreaPPP e f d) (AreaPPP e d b))
+                    (+ (AreaPPP a c d) (AreaPPP a d b)) 
+                )
+            )
+            :pattern ((OnL a AB) (OnL b AB) (SameSide c d AB) (Between a e b) (Between c f d) AC BD)
         )
     )
 )

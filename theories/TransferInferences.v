@@ -173,3 +173,7 @@ Axiom sum_areas_onlyif : forall (a b c d : Point) (L : Line),
 Axiom parallelogram_area : forall (a b c d : Point) (AB CD AC BD : Line), 
     Parallelogram a b c d AB CD AC BD -> 
         (area2real (AreaPPP a c d) + area2real (AreaPPP a d b) = area2real (AreaPPP b a c) + area2real (AreaPPP b c d)).
+
+Axiom sum_parallelograms_area : forall (a b c d e f : Point) (AB CD AC BD : Line), 
+    Parallelogram a b c d AB CD AC BD /\ Between a e b /\ Between c f d ->
+        (area2real (AreaPPP a c f) + area2real (AreaPPP a f e) + area2real (AreaPPP e f d) + area2real (AreaPPP e d b) = area2real (AreaPPP a c d) + area2real (AreaPPP a d b)).

@@ -68,14 +68,14 @@ Definition DistinctPointsOnL (a b : Point) (L : Line) :=
     a <> b /\ OnL a L /\ OnL b L.
 
 Definition Triangle (a b c : Point) (AB BC CA : Line) :=
-    DistinctPointsOnL a b AB /\ DistinctPointsOnL b c BC /\ DistinctPointsOnL c a CA /\
+    DistinctPointsOnL a b AB /\ OnL b BC /\ OnL c BC /\ OnL c CA /\ OnL a CA /\
     AB <> BC /\ BC <> CA /\ CA <> AB.
 
 Definition RectilinearAngle (a b c : Point) (AB BC : Line) :=
     DistinctPointsOnL a b AB /\ DistinctPointsOnL b c BC.
 
 Definition Parallelogram (a b c d : Point) (AB CD AC BD : Line) :=
-    DistinctPointsOnL a b AB /\ DistinctPointsOnL c d CD /\ DistinctPointsOnL a c AC /\ DistinctPointsOnL b d BD /\ 
+    OnL a AB /\ OnL b AB /\ OnL c CD /\ OnL d CD /\ OnL a AC /\ OnL c AC /\ DistinctPointsOnL b d BD /\ 
     (SameSide a c BD) /\ ~(IntersectsLL AB CD) /\ ~(IntersectsLL AC BD).
 
 Notation "a 'on_line' L" := (OnL a L)  (at level 75, no associativity) : assert_scope.

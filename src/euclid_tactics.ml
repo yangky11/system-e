@@ -214,16 +214,14 @@ let euclid_smt : unit Proofview.tactic =
             let a_neq_b = mk_not ctx (mk_eq ctx (recur (Array.get args 0)) (recur (Array.get args 1))) in
             let a_on_AB = mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 3)] in
             let b_on_AB = mk_app ctx on_l_func [recur (Array.get args 1); recur (Array.get args 3)] in
-            let b_neq_c = mk_not ctx (mk_eq ctx (recur (Array.get args 1)) (recur (Array.get args 2))) in
             let b_on_BC = mk_app ctx on_l_func [recur (Array.get args 1); recur (Array.get args 4)] in
             let c_on_BC = mk_app ctx on_l_func [recur (Array.get args 2); recur (Array.get args 4)] in
-            let c_neq_a = mk_not ctx (mk_eq ctx (recur (Array.get args 2)) (recur (Array.get args 0))) in
             let c_on_CA = mk_app ctx on_l_func [recur (Array.get args 2); recur (Array.get args 5)] in
             let a_on_CA = mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 5)] in
             let ab_neq_bc = mk_not ctx (mk_eq ctx (recur (Array.get args 3)) (recur (Array.get args 4))) in
             let bc_neq_ca = mk_not ctx (mk_eq ctx (recur (Array.get args 4)) (recur (Array.get args 5))) in
             let ca_neq_ab = mk_not ctx (mk_eq ctx (recur (Array.get args 5)) (recur (Array.get args 3))) in
-            mk_and ctx [a_neq_b; a_on_AB; b_on_AB; b_neq_c; b_on_BC; c_on_BC; c_neq_a; c_on_CA; a_on_CA; ab_neq_bc; bc_neq_ca; ca_neq_ab]
+            mk_and ctx [a_neq_b; a_on_AB; b_on_AB; b_on_BC; c_on_BC; c_on_CA; a_on_CA; ab_neq_bc; bc_neq_ca; ca_neq_ab]
         | "RectilinearAngle" ->
             let a_neq_b = mk_not ctx (mk_eq ctx (recur (Array.get args 0)) (recur (Array.get args 1))) in
             let a_on_ab = mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 3)] in
@@ -233,13 +231,10 @@ let euclid_smt : unit Proofview.tactic =
             let c_on_bc = mk_app ctx on_l_func [recur (Array.get args 2); recur (Array.get args 4)] in
             mk_and ctx [a_neq_b; a_on_ab; b_on_ab; b_neq_c; b_on_bc; c_on_bc]
         | "Parallelogram" ->
-            let a_neq_b = mk_not ctx (mk_eq ctx (recur (Array.get args 0)) (recur (Array.get args 1))) in
             let a_on_AB = mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 4)] in
             let b_on_AB = mk_app ctx on_l_func [recur (Array.get args 1); recur (Array.get args 4)] in
-            let c_neq_d = mk_not ctx (mk_eq ctx (recur (Array.get args 2)) (recur (Array.get args 3))) in
             let c_on_CD = mk_app ctx on_l_func [recur (Array.get args 2); recur (Array.get args 5)] in
             let d_on_CD = mk_app ctx on_l_func [recur (Array.get args 3); recur (Array.get args 5)] in
-            let a_neq_c = mk_not ctx (mk_eq ctx (recur (Array.get args 0)) (recur (Array.get args 2))) in
             let a_on_AC = mk_app ctx on_l_func [recur (Array.get args 0); recur (Array.get args 6)] in
             let c_on_AC = mk_app ctx on_l_func [recur (Array.get args 2); recur (Array.get args 6)] in
             let b_neq_d = mk_not ctx (mk_eq ctx (recur (Array.get args 1)) (recur (Array.get args 3))) in
@@ -248,7 +243,7 @@ let euclid_smt : unit Proofview.tactic =
             let ac_sameside_bd = mk_app ctx sameside_func [recur (Array.get args 0); recur (Array.get args 2); recur (Array.get args 7)] in
             let ab_parallel_cd = mk_not ctx (mk_app ctx intersects_ll_func [recur (Array.get args 4); recur (Array.get args 5)]) in
             let ac_parallel_bd = mk_not ctx (mk_app ctx intersects_ll_func [recur (Array.get args 6); recur (Array.get args 7)]) in
-            mk_and ctx [a_neq_b; a_on_AB; b_on_AB; c_neq_d; c_on_CD; d_on_CD; a_neq_c; a_on_AC; c_on_AC; b_neq_d; b_on_BD; d_on_BD; ac_sameside_bd; ab_parallel_cd; ac_parallel_bd]
+            mk_and ctx [a_on_AB; b_on_AB; c_on_CD; d_on_CD; a_on_AC; c_on_AC; b_neq_d; b_on_BD; d_on_BD; ac_sameside_bd; ab_parallel_cd; ac_parallel_bd]
         | "Center" ->
             mk_app ctx center_func [recur (Array.get args 0); recur (Array.get args 1)]
         | "IntersectsLL" ->

@@ -28,8 +28,7 @@ System E [1] is a logic system designed for formalizing the theorems and proofs 
 
 ## Installation
 
-1. `git clone https://github.com/princeton-vl/system-e && cd system-e`
-1. `dune build && dune install`
+`dune build && dune install`
 
 
 ## Running

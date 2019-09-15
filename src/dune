@@ -1,7 +1,7 @@
 (library
   (name euclid_plugin)
   (public_name system-e.plugin)
-  (synopsis "Coq Template Plugin")
+  (synopsis "System E: A Formal System for Euclid's Elements")
   (flags :standard -w -27)       ; CoqPP codes requires this
   (libraries
     coq.vernac                      ; needed for vernac extend

@@ -6,7 +6,6 @@ Require Export ConstructionRules.
 Require Export DiagrammaticInferences.
 Require Export MetricInferences.
 Require Export TransferInferences.
-Require Export SuperpositionInferences.
 
 Require Export Program.Tactics.
 Require Export Psatz.

@@ -1,7 +1,7 @@
 System E: A Formal System for Euclid's Elements
 --------------------------------
 
-System E [1] is a logic system designed for formalizing the theorems and proofs in Book I to IV of Euclid's Elements of Geometry. This is an implementation of a variant of System E. It encodes Euclid's proofs in Coq and uses Z3 for filling in the reasoning jumps in the proofs.
+System E [1] is a logic system designed for formalizing the theorems and proofs in Book I to IV of *Euclid's Elements of Geometry*. This repo is an implementation of a variant of System E. It encodes Euclid's proofs in Coq and uses Z3 for filling in the reasoning jumps in the proofs (referred to as "direct consequences" in the original System E paper).
 
 [1]
 ```
@@ -28,8 +28,7 @@ System E [1] is a logic system designed for formalizing the theorems and proofs 
 
 ## Installation
 
-1. `git clone https://github.com/princeton-vl/system-e && cd system-e`
-1. `dune build && dune install`
+`dune build && dune install`
 
 
 ## Running
@@ -43,7 +42,7 @@ This is the proposition 1 in Book I.
 
 ```coq
 Theorem Proposition_1 : forall (a b : Point), a <> b ->
-    exists c : Point, SegmentPP c a == SegmentPP c b == SegmentPP a b.
+    exists c : Point, (SegmentPP c a == SegmentPP a b)%segment /\ (SegmentPP c b == SegmentPP a b)%segment.
 Proof.
     intros.
     euclid_apply (ConstructionRules.circle_from_points a b) as alpha. (* construct a circle centered around a *)

@@ -42,7 +42,7 @@ This is the proposition 1 in Book I.
 
 ```coq
 Theorem Proposition_1 : forall (a b : Point), a <> b ->
-    exists c : Point, SegmentPP c a == SegmentPP c b == SegmentPP a b.
+    exists c : Point, (SegmentPP c a == SegmentPP a b)%segment /\ (SegmentPP c b == SegmentPP a b)%segment.
 Proof.
     intros.
     euclid_apply (ConstructionRules.circle_from_points a b) as alpha. (* construct a circle centered around a *)

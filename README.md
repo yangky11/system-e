@@ -28,7 +28,8 @@ System E [1] is a logic system designed for formalizing the theorems and proofs 
 
 ## Installation
 
-`dune build && dune install`
+1. `export LD_LIBRARY_PATH=/n/fs/grad/kaiyuy/.opam/4.07.1+flambda/lib/z3:$LD_LIBRARY_PATH`
+2. `dune build && dune install`
 
 
 ## Running

@@ -1,14 +1,29 @@
-System E
+System E: A Formal System for Euclid's Elements
 --------------------------------
 
+System E is a logic system designed for formalizing the theorems and proofs in Book I to IV of Euclid's Elements of Geometry. This is an implementation of a variant of System E. It encodes Euclid's proofs in Coq and uses Z3 for filling in the reasoning jumps in the proofs.
+
+```
+@article{avigad2009formal,
+  title={A formal system for Euclid’s Elements},
+  author={Avigad, Jeremy and Dean, Edward and Mumma, John},
+  journal={The Review of Symbolic Logic},
+  volume={2},
+  number={4},
+  pages={700--768},
+  year={2009},
+  publisher={Cambridge University Press}
+}
+```
 
 ## Dependencies
 
 * [OPAM](https://opam.ocaml.org/)
 * [Coq == 8.9.1](https://opam.ocaml.org/packages/coq/) install via OPAM: `opam install coq=8.9.1`
-* [dune >= 1.10.0](https://opam.ocaml.org/packages/dune/) install via OPAM: `opam install dune=1.10.0`
+* [dune == 1.10.0](https://opam.ocaml.org/packages/dune/) install via OPAM: `opam install dune=1.10.0`
 * [z3 == 4.8.1](https://opam.ocaml.org/packages/z3/z3.4.8.1/) install via OPAM: `opam install z3=4.8.1`
 
+*Note*: Please install the exact versions listed above, as there are known issues with z3 4.8.4 and dune 1.11.
 
 ## Installation
 

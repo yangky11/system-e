@@ -1,3 +1,3 @@
-(lang dune 1.9)
+(lang dune 1.10)
 (using coq 0.1)
 (name system-e)

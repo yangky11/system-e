@@ -1,8 +1,9 @@
 System E: A Formal System for Euclid's Elements
 --------------------------------
 
-System E is a logic system designed for formalizing the theorems and proofs in Book I to IV of Euclid's Elements of Geometry. This is an implementation of a variant of System E. It encodes Euclid's proofs in Coq and uses Z3 for filling in the reasoning jumps in the proofs.
+System E [1] is a logic system designed for formalizing the theorems and proofs in Book I to IV of Euclid's Elements of Geometry. This is an implementation of a variant of System E. It encodes Euclid's proofs in Coq and uses Z3 for filling in the reasoning jumps in the proofs.
 
+[1]
 ```
 @article{avigad2009formal,
   title={A formal system for Euclid’s Elements},
@@ -31,16 +32,16 @@ System E is a logic system designed for formalizing the theorems and proofs in B
 1. `dune build && dune install`
 
 
-# Running
+## Running
+
+`coqc Book_1.v`
+
+
+## Example Proof
+
+This is the proposition 1 in Book I.
 
 ```coq
-Require Import SystemE.Axioms.
-
-Lemma foo : True.
-Proof.
-    hello. now auto.
-Qed.
-
 Theorem Proposition_1 : forall (a b : Point), a <> b ->
     exists c : Point, SegmentPP c a == SegmentPP c b == SegmentPP a b.
 Proof.

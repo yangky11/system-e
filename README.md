@@ -38,7 +38,7 @@ System E [1] is a logic system designed for formalizing the theorems and proofs 
 
 ## Example Proof
 
-This is the proposition 1 in Book I.
+This is the formalized proof of proposition 1 in Book I.
 
 ```coq
 Theorem Proposition_1 : forall (a b : Point), a <> b ->

@@ -141,7 +141,6 @@ Tactic Notation "euclid_apply" constr(rule) "as" ident(name1) :=
     euclid_apply' rule name1 name2 name3 name4 name5 name6 name7 name8.
 
 Tactic Notation "euclid_apply" constr(rule) "as" ident(name1) ident(name2) :=
-    idtac "2 args";
     let name3 := fresh "z" in
     let name4 := fresh "u" in
     let name5 := fresh "v" in

@@ -123,7 +123,7 @@ let euclid_smt : unit Proofview.tactic =
     | Cast _ -> failwith "Cast"
 
     | Prod (name, t1, t2) -> 
-        (match name with
+        (match name.binder_name with
         | Anonymous -> 
             mk_implies ctx (recur t1) (constr2expr env sigma t2 constants (binders @ [None]) ctx)
         | Name id ->
@@ -133,7 +133,7 @@ let euclid_smt : unit Proofview.tactic =
               (constr2expr env sigma t2 constants (binders @ [Some sort]) ctx) None [] [] None None)
 
     | Lambda (name, t, body) -> (* existential quantifiers *)
-        (match name with
+        (match name.binder_name with
         | Anonymous -> recur body
         | Name id -> 
             let id_str = Names.Id.to_string id in
@@ -274,6 +274,7 @@ let euclid_smt : unit Proofview.tactic =
     | Fix _ -> failwith "Fix"
     | CoFix _ -> failwith "CoFix"
     | Proj _ -> failwith "Proj"
+    | Int _ -> failwith "Int"
   in
 
 

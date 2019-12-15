@@ -11,11 +11,5 @@
   )
 )
 
-(rule
- (targets tactics_syntax.ml)
- (deps (:pp-file tactics_syntax.ml4) )
- (action (bash "camlp5 pa_o.cmo pr_o.cmo %{lib:coq.grammar:grammar.cma} -loc loc -impl %{pp-file} -o %{targets}")))
-; camlp5 may need the following additional libs, YMMV
-; pa_op.cmo pr_dump.cmo pa_extend.cmo q_MLast.cmo pa_macro.cmo
-
-
+; This will let Dune know about Coq's .mlg grammar files.
+(coq.pp (modules tactics_syntax))

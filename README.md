@@ -19,22 +19,21 @@ System E [1] is a logic system designed for formalizing the theorems and proofs 
 
 ## Dependencies
 
-* [OPAM](https://opam.ocaml.org/)
-* [Coq == 8.9.1](https://opam.ocaml.org/packages/coq/) install via OPAM: `opam install coq=8.9.1`
-* [dune == 1.10.0](https://opam.ocaml.org/packages/dune/) install via OPAM: `opam install dune=1.10.0`
+* [OPAM == 2.05](https://opam.ocaml.org/)
+* [Coq == 8.10.2](https://opam.ocaml.org/packages/coq/) install via OPAM: `opam install coq=8.9.1`
+* [dune == 1.11.4](https://opam.ocaml.org/packages/dune/) install via OPAM: `opam install dune=1.10.0`
 * [z3 == 4.8.1](https://opam.ocaml.org/packages/z3/z3.4.8.1/) install via OPAM: `opam install z3=4.8.1`
 
 *Note*: Please install the exact versions listed above, as there are known issues with z3 4.8.4 and dune 1.11.
 
 ## Installation
 
-1. `export LD_LIBRARY_PATH=/n/fs/grad/kaiyuy/.opam/4.07.1+flambda/lib/z3:$LD_LIBRARY_PATH`
-2. `dune build && dune install`
+`dune build && dune install`
 
 
 ## Running
 
-`coqc Book_1.v`
+`coqc Book_1.v -I PATH_TO_Z3_OCAML_BINDING`
 
 
 ## Example Proof

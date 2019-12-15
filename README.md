@@ -19,7 +19,7 @@ System E [1] is a logic system designed for formalizing the theorems and proofs 
 
 ## Dependencies
 
-* [OPAM](https://opam.ocaml.org/)
+* [OPAM == 2.05](https://opam.ocaml.org/)
 * [Coq == 8.9.1](https://opam.ocaml.org/packages/coq/) install via OPAM: `opam install coq=8.9.1`
 * [dune == 1.10.0](https://opam.ocaml.org/packages/dune/) install via OPAM: `opam install dune=1.10.0`
 * [z3 == 4.8.1](https://opam.ocaml.org/packages/z3/z3.4.8.1/) install via OPAM: `opam install z3=4.8.1`

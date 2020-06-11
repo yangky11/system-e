@@ -275,6 +275,7 @@ let euclid_smt : unit Proofview.tactic =
     | CoFix _ -> failwith "CoFix"
     | Proj _ -> failwith "Proj"
     | Int _ -> failwith "Int"
+    | Float _ -> failwith "Float"
   in
 
 

@@ -23,6 +23,7 @@ System E [1] is a logic system designed for formalizing the theorems and proofs 
 * [dune](https://opam.ocaml.org/packages/dune/) install via OPAM: `opam install dune`
 * [Coq 8.11.2](https://opam.ocaml.org/packages/coq/) install via OPAM: `opam install coq=8.11.2`
 * [z3 4.8.1](https://opam.ocaml.org/packages/z3/z3.4.8.1/) install via OPAM: `opam install z3=4.8.1`
+* [SerAPI](https://github.com/ejgallego/coq-serapi) install via OPAM: `opam install coq-serapi`
 
 *Note*: Please install the exact versions listed above, as there are known issues with z3 4.8.4 and dune 1.11.
 

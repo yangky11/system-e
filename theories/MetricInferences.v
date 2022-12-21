@@ -1,3 +1,6 @@
+(*
+Metric inferences defined in Sec. 3.5 of Avigad et al. 2009
+*)
 Require Import Sorts.
 Open Scope R.
 

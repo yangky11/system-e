@@ -1,3 +1,6 @@
+(*
+euclid_smt: a tactic that fills Euclid's reasoning gaps using SMT solvers.
+*)
 open Z3
 open Z3.Boolean
 open Z3.Expr

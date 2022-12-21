@@ -1,3 +1,6 @@
+(*
+Transfer inferences defined in Sec. 3.6 of Avigad et al. 2009
+*)
 Require Import Sorts.
 
 (* diagram-segment transfer axioms *)

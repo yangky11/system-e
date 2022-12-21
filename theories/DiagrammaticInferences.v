@@ -1,3 +1,6 @@
+(*
+Diagrammatic inferences defined in Sec. 3.4 of Avigad et al. 2009
+*)
 Require Import Sorts.
 
 (* generalities *)

@@ -1,3 +1,6 @@
+(*
+Construction rules defined in Sec. 3.3 of Avigad et al. 2009
+*)
 Require Import Sorts.
 
 (* points *)

@@ -1,3 +1,11 @@
+(*
+Core tactics used to implement Euclid's reasoning patterns, such as 
+applying an existing theorem (`euclid_apply`), proof by contradiction 
+(`euclid_contradict`), and proof by case analysis (`euclid_case`).
+
+They utilize `euclid_trivial`: a tactic that fills Euclid's reasoning gaps
+using SMT solvers. It calls a tactic `euclid_smt` implemented in OCaml.
+*)
 Declare ML Module "z3ml".
 Declare ML Module "euclid_plugin".
 

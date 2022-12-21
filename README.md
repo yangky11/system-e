@@ -1,9 +1,8 @@
 System E: A Formal System for Euclid's Elements
 --------------------------------
 
-System E [1] is a logic system designed for formalizing the theorems and proofs in Book I to IV of *Euclid's Elements of Geometry*. This repo is an implementation of a variant of System E. It encodes Euclid's proofs in Coq and uses Z3 for filling in the reasoning jumps in the proofs (referred to as "direct consequences" in the original System E paper).
+System E (Avigad et al. 2009) is a logic system designed for formalizing the theorems and proofs in Book I to IV of *Euclid's Elements of Geometry*. This repo is an implementation of a variant of System E. It encodes Euclid's proofs in Coq and uses Z3 for filling in the reasoning gaps in the proofs (referred to as "direct consequences" in the original System E paper).
 
-[1]
 ```
 @article{avigad2009formal,
   title={A formal system for Euclid’s Elements},
